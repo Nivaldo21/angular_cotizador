@@ -1,1 +1,309 @@
-/* You can add global styles to this file, and also import other style files */
+/* *************** INDICE *************** 
+
+    * GENERALES
+    * COTIZADOR
+    * GENERAR COTIZACION
+
+************************************** */
+
+/* ******* GENERALES ******* */
+body{font-size: 0.85rem!important;}
+
+h1,h2,h3,h4,h5,h6{
+  font-weight: 700;
+  letter-spacing: -1px;
+  font-family: 'Ubuntu', sans-serif;
+  margin-bottom: 0;
+  color: #292D32;}
+
+@media (max-width: 991px){
+  .h2, h2 {font-size: calc(1.6rem + 1vw);}
+}
+
+h6{margin-bottom: 1rem;}
+
+.container-xxl{
+  max-width: 1450px;
+  width: 95%;}
+
+.rounded {border-radius: 0.5rem!important;}
+
+a {color: #00A99D;}
+a:hover{
+  transition: all 0.5s ease;
+  color: #16857d;}
+
+.gris{color: #676767;}
+
+/*logotipo*/
+.bgTop{
+  background: #322e61;
+  padding:13px 20px;}
+
+a.logotipo img{height: 35px;}
+
+.mt13{margin-top: 1.3rem!important;}
+
+/*botones*/
+.btn{
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.27rem 0.75rem;}
+
+.btn-teal{
+  color: #fff;
+  background: #00A99D;
+  border: 1px solid #00A99D;}
+
+.btn-teal:hover{
+  color: #00A99D;
+  background:#fff;
+  transition: all 0.5s ease;}
+
+.btn-teal-line{
+  color: #00A99D;
+  background: #fff;
+  border: 1px solid #00A99D;}
+
+.btn-teal-line:hover{
+  color: #fff;
+  background:#00A99D;
+  transition: all 0.5s ease;}
+
+.btn-gris{
+  color: #fff;
+  background: #9DB5C1;
+  border: 1px solid #9DB5C1;}
+
+.btn-gris:hover{
+  color: #9DB5C1;
+  background:#fff;
+  transition: all 0.5s ease;}
+
+.btnBuscar{margin-top: 1.2rem;}
+
+.btnCentrar{
+  display: block;
+  margin: 0rem auto 0.5rem;}
+
+
+
+@media (max-width:767px){
+  .btnBuscar{margin-top: 0rem;}
+}
+
+/*-*-*-*-*- MENU -*-*-*-*-*/
+.plecaMenu{margin-top: 61px;}
+.dropdown-toggle::after{display: none;}
+
+.dropdownMenu{
+  padding: 0 13px 0 0;
+  width: fit-content;}
+
+.dropdownMenu .dropdown-toggle{color: #676767;}
+.dropdownMenu .dropdown-toggle:hover{color:#00A99D;}
+
+.dropdown-item {font-size: 0.9rem; cursor: pointer;}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #fff;
+    background-color: #00A99D;}
+
+.btnVentas{
+  background: url('assets/img/ic-ventas.png') no-repeat;
+  background-size: 22px auto;
+  background-position: 13px 4px;
+  padding-left: 2.8rem;}
+
+.btnVentas:hover{
+  transition: all 0.5s ease;
+  background: url('assets/img/ic-ventas-hover.png') no-repeat;
+  background-size: 22px auto;
+  background-position: 13px 4px;}
+
+/*-*-*-*-*- SECCIONES GRAL -*-*-*-*-*/
+/*titulo secciones*/
+.tituloSecciones{padding: 25px 0 0;}
+
+/*breadcrumb*/
+.breadcrumb{margin-left: 0.2rem;}
+.breadcrumb li{font-size: 0.8rem;}
+
+
+/*formulario*/
+.form-control {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  color: #676767;}
+
+.form-select {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;}
+
+.form-label {
+  margin-bottom: 0rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #676767;}
+
+.label100{width: 100%;}
+.txtLabel-lg{width: 115%;}
+
+@media (max-width:400px){
+  .txtLabel-lg{width: initial;}
+}
+
+/*-*-*-*-*- COTIZADOR -*-*-*-*-*/
+/*tabla*/
+.table > thead > tr > th{
+  background: #545A82;
+  color: #fff;
+  font-size: 0.7rem;
+  position: relative;}
+
+.table > thead > tr > th span{
+  float: left;
+  display: block;
+  width: fit-content;}
+
+.table th a.thFlechas{
+  display: block;
+  height: 15px;
+  width: 15px;
+  background-image: url('assets/img/flechas.svg');
+  background-size: auto 13px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.8;
+  float: left;
+  margin-left: 0.5rem;}
+
+.table > thead > tr > th.th0{min-width: 160px;}
+.table > thead > tr > th.th1{min-width: 300px;}
+.table > thead > tr > th.th2{min-width: 100px;}
+.table > thead > tr > th.th4{min-width: 400px;}
+.table > thead > tr > th.th5{min-width: 130px;}
+.table > thead > tr > th.th6{min-width: 70px;}
+.table > thead > tr > th.th7{min-width: 190px;}
+
+.table-op thead.theadTop {
+    position: sticky;
+    top: 0px;}
+
+.table > tbody > tr > td{
+  border: 1px solid #dee2e6;
+  padding: 0 0.5rem;
+  vertical-align: middle!important;}
+
+.table > tbody > tr > td.tdIzq{
+  text-align:right; 
+  padding-right: 0.8rem;}
+
+.table > tbody > tr.subTable:hover {
+  background-color: #fff!important;}
+
+.tdHead{
+  min-width: 118px;
+  max-width: 118px;
+  background: #bec2e0!important;
+  font-size: 0.7rem;
+  font-weight: 700;}
+
+.tdHead-Descripcion{
+  min-width: 410px;
+  max-width: 410px;}
+
+.tdHead-Materiales{
+  min-width: 95px;
+  max-width: 95px;
+}
+
+.tdInt {
+    border: 0px solid #dee2e6;
+    padding-right: 0;}
+
+/*estatus*/
+.estatus{
+   border-radius: 50px;
+    padding: 0.4rem 0.8rem 0.4rem;
+    font-weight: 400;
+    font-size: 0.8rem;
+    display: block;
+    margin: auto;
+    text-align: center;
+    line-height: 0.8rem;
+    width: fit-content;}
+
+.est-verde{background: #0AB845; color: #fff;}
+
+/*iconos tabla*/
+.btn-icon-action{
+  border: 0;
+  background: transparent;
+  padding: 0.2rem;
+  margin-bottom: 0.3rem;}
+
+.btn-icon-action img{
+  width: auto;
+  height: 20px;}
+
+.btn-icon-action:hover img{
+  transition: all 0.5s ease;
+  opacity: 0.5;}
+
+/*paginacion*/
+.page-link {color: #676767;}
+
+.page-link:hover {
+    z-index: 2;
+    background: #afb7ed;
+    color: #fff;}
+
+
+/*-*-*-*-*- GENERAR COTIZACION -*-*-*-*-*/
+/*acordeon*/
+.accordion-button{background-color: #e3e5e8;}
+
+.accordion-button:not(.collapsed) {
+    color: #fff;
+    background-color: #545A82;}
+
+.accordion-button::after {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-left: auto;
+    content: "";
+    background-image: url('assets/img/flechaNegra-arriba-accordeon.svg');
+    background-repeat: no-repeat;
+    background-size: 18px auto;
+    transition: transform .2s ease-in-out;
+    background-position-y: 5px;}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url('assets/img/flechaBca-arriba-accordeon.svg');
+    transform: rotate(-180deg);
+}
+
+.accordion-button:focus{border-color: red;}
+
+/*totales*/
+.totales{padding: 0.5rem 1rem;}
+
+.totales .contTotales{border-bottom:1px solid #CED4DA;}
+
+.disabled{
+  background-color: var(--bs-secondary-bg);
+  opacity: 1;
+  cursor: not-allowed; /* Cambia el cursor para indicar que no se puede interactuar */
+  pointer-events: none; 
+}
+
+
+/* this will set the toastr style */
+.toast-custom {
+  background-color: gray;
+}
+#toast-container>.toast-custom {
+  background-image: url('/assets/img/reloj.png')!important;
+  }

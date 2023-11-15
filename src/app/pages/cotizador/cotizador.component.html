@@ -1,0 +1,109 @@
+<div class="container-xxl">
+    <!-- titulo secciones -->
+    <div class="tituloSecciones">
+        <div class="row">
+            <div class="col-6">
+            <h2>Cotizador</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Ventas</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Cotizador</li>
+                </ol>
+            </nav>
+            </div>
+            <div class="col-6">
+            <button class="btn btn-teal float-end mt-2" (click)="generarCotizacion()">Generar cotización</button>
+            </div>
+        </div>
+    </div>
+          
+    <!-- Filtros -->
+    <div class="my-3 p-4 bg-body rounded shadow-sm">
+    <h6>FILTROS</h6>
+        <form [formGroup]="form_busqueda" (submit)="getCotizaciones()">
+            <div class="row">
+                <div class="col-sm-6 col-md-3 col-lg-2 mb-3">
+                    <label for="folio_cotizacion" class="form-label">FÓLIO COTIZACIÓN</label>
+                    <input formControlName="folio_cotizacion" name="folio_cotizacion" id="folio_cotizacion" type="text" class="form-control">
+                </div>
+                <div class="col-sm-6  col-md-6 col-lg-4 mb-3">
+                    <label for="" class="form-label text-center label100">FECHA GENERACIÓN</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input formControlName="fecha_generacion_desde" name="fecha_generacion_desde" placeholder="Desde" type="text" onfocus="(this.type='date')" onfocusout="(this.type='text')" class="form-control" >
+                        </div>
+                        <div class="col-6">
+                            <input formControlName="fecha_generacion_hasta" name="fecha_generacion_hasta" placeholder="Hasta" type="text" onfocus="(this.type='date')" onfocusout="(this.type='text')" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-2 mb-3">
+                    <label for="cliente" class="form-label">CLIENTE</label>
+                    <input formControlName="cliente" name="cliente" type="text" class="form-control">
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-2 mb-3">
+                    <label for="estatus" class="form-label">ESTATUS</label>
+                    <input formControlName="estatus" name="estatus" type="text" class="form-control">
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-2 mb-3">
+                    <button type="submit" class="btn btn-teal btnBuscar">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Tabla-->
+    <div class="my-3 p-4 bg-body rounded shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover-all">
+        <thead>
+            <tr>
+            <th class="th2"><span>FÓLIO DE COTIZACIÓN</span> <a href="#" class="thFlechas"></a></th>
+            <th class="th2"><span>FECHA DE GENERACIÓN</span> <a href="#" class="thFlechas"></a></th>
+            <th class="th1"><span>CLIENTE</span> <a href="#" class="thFlechas"></a></th>
+            <th class="th0"><span>MONTO TOTAL</span> <a href="#" class="thFlechas"></a></th>
+            <th class="th0"><span>ESTATUS</span> <a href="#" class="thFlechas"></a></th>
+            <th class="th0"><span>VENDEDOR</span> <a href="#" class="thFlechas"></a></th>
+            <th class="text-center th2">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of array_cot">
+                <td>{{item.folio_cotizacion}}</td>
+                <td class="text-center">{{item.fecha_generacion | date:'EEEE d MMMM y':'':'Es-MX'}}</td>
+                <td>{{item.cliente.CLI_NOMBRE}}</td>
+                <td class="tdIzq">{{item.total | currency }}</td>
+                <td class="text-center"><span class="estatus est-verde">{{item.estatus=='G' ? 'Generada': item.estatus}}</span></td>
+                <td>{{item.vendedor.nombre_vendedor}}</td>
+                <td class="text-center">
+                    <button type="button" title="Consultar cotización" class="btn-icon-action"><img src="assets/img/ic-observaciones.png" disabled></button>
+                    <button type="button" title="Estado de resultados" class="btn-icon-action"><img src="assets/img/ic-estado-resultados.png" disabled></button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    <!-- termina tabla -->
+    <!-- inicia paginacion -->
+    <div class="row mt-3">
+        <div class="col-6">
+        <p class="gris">Mostrar 1 de 10</p>
+        </div>
+        <div class="col-6">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link">Anterior</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Siguiente</a>
+            </li>
+            </ul>
+        </nav>
+        </div>
+    </div>
+    </div>
+      
+</div>

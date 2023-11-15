@@ -1,0 +1,570 @@
+<main class="container-xxl">
+    <!-- titulo secciones -->
+          <div class="tituloSecciones">
+            <div class="row">
+              <div class="col-12">
+                <h2>Generar cotización</h2>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Ventas</a></li>
+                    <li class="breadcrumb-item"><a href="index.html">Cotizador</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Generar cotización</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          
+    <!-- Filtros -->
+          <div class="my-3 p-4 bg-body rounded shadow-sm">
+            <div>
+              <!-- 1ra linea -->
+              <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">CLIENTE / PROSPECTO</label>
+                  <ng-select [items]="clienteOptions"
+                          [addTag]="true"
+                          addTagText="Añadir Prospecto"
+                          bindLabel="CLI_NOMBRE"  
+                          [(ngModel)]="selectedCliente">
+                  </ng-select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">TIPO CLIENTE</label>
+                  <select class="form-select" [(ngModel)]="cliente_selected" (ngModelChange)="onParam_industria()">
+                    <option value="">- Seleccionar -</option>
+                    <option value="automotriz">Automotriz</option>
+                    <option value="appliance">Appliance</option>
+                    <option value="energias_renovables">Energías renovables</option>
+                    <option value="consumibles">Consumibles</option>
+                  </select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">TIPO PROCESO</label>
+                  <select class="form-select" [(ngModel)]="proceso_selected"  (ngModelChange)="onProceso_Maquina()">
+                    <option value="">- Seleccionar -</option>
+                    <option value="plastico">Plástico</option>
+                    <option value="metal">Metal</option>
+                  </select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">PRECIOS</label>
+                  <select class="form-select" [(ngModel)]="precio_selected" (ngModelChange)="onParam_industria()">
+                    <option value="">- Seleccionar -</option>
+                    <option value="minimo">Mínimo</option>
+                    <option value="medio">Medio</option>
+                    <option value="maximo">Máximo</option>
+                  </select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">VENDEDOR</label>
+                  <ng-select [items]="vendedoresOptions"
+                    [addTag]="true"
+                    addTagText="Añadir Vendedor"
+                    bindLabel="nombre_vendedor"
+                    [(ngModel)]="selectedVendedor">
+                  </ng-select>
+                </div>
+              </div>
+              <!-- 2da linea -->
+              <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">CÓDIGO DE PARTE</label>
+                  <ng-select [items]="partesOptions"
+                    bindLabel="codigo_parte"
+                    [addTag]="true"
+                    addTagText="Añadir nuevo código"
+                    (ngModelChange)="onParteSelected(1,$event)"
+                    [(ngModel)]="selectedParte_codigo">
+                  </ng-select>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-6 col-xl-4 mb-3">
+                  <label for="" class="form-label">DESCRIPCIÓN PARTE</label>
+                  <ng-select [items]="partesOptions"
+                    [addTag]="true"
+                    addTagText="Añadir nueva descripción"
+                    bindLabel="nombre_parte"
+                    (ngModelChange)="onParteSelected(2,$event)"
+                    [(ngModel)]="selectedParte_descripcion">
+                  </ng-select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                  <label for="" class="form-label">CAV</label>
+                  <input type="number" [(ngModel)]="cav" (ngModelChange)="calculateWeigth()" class="form-control">
+                </div>
+              </div>
+              <!-- 3ra linea -->
+            </div>
+    <!-- COMIENZA ACORDEON -->
+            <div>
+              <div class="accordion" id="accordionPanelsStayOpenExample">
+    <!-- MATERIA PRIMA -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-materiaPrima">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelmateriaPrima" aria-expanded="true" aria-controls="panelmateriaPrima">
+                      Materia prima
+                    </button>
+                  </h2>
+                  <div id="panelmateriaPrima" class="accordion-collapse collapse show" aria-labelledby="panelHead-materiaPrima">
+                    <div class="accordion-body">
+                      <form [formGroup]="form_materiaPrima" (submit)="setMateriaPrima()" >
+                        <div class="row">
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="codigo_materia_prima" class="form-label">CÓDIGO MATERIA PRIMA</label>
+                            <ng-select formControlName="codigo_materia_prima" name="codigo_materia_prima" [items]="materialesOptions"
+                              [addTag]="true"
+                              addTagText="Añadir nuevo código"
+                              bindLabel="codigo_material"
+                              (ngModelChange)="onMaterialSelected(1,$event)">
+                            </ng-select>
+                          </div>
+                          <div class="col-sm-12 col-md-8 col-lg-6 col-xl-4 mb-3">
+                            <label for="descripcion_materia_prima" class="form-label">DESCRIPCIÓN MATERIA PRIMA</label>
+                            <ng-select formControlName="descripcion_materia_prima" name="descripcion_materia_prima" [items]="materialesOptions"
+                              [addTag]="true"
+                              addTagText="Añadir nombre material"
+                              bindLabel="nombre_material"
+                              (ngModelChange)="onMaterialSelected(2,$event)">
+                            </ng-select>
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="SUPPLIER_RESIN" class="form-label">SUPPLIER RESIN</label>
+                            <input type="text" class="form-control" formControlName="SUPPLIER_RESIN" name="SUPPLIER_RESIN">
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="parte_g" class="form-label">PART (g)</label>
+                            <input type="text" class="form-control" formControlName="parte_g" (ngModelChange)="calculatedValue()" name="parte_g">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="RUNNER_percent" class="form-label">RUNNER %</label>
+                            <input type="text" class="form-control" formControlName="RUNNER_percent" (ngModelChange)="calculatedValue()" name="RUNNER_percent" >
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="RUNNER_g" class="form-label">RUNNER (g)</label>
+                            <input type="text" class="form-control disabled" formControlName="RUNNER_g" name="RUNNER_g" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="loss_percent" class="form-label">LOSS %</label>
+                            <input type="text" class="form-control" formControlName="loss_percent" name="loss_percent" (ngModelChange)="calculateWeigth()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="weigth" class="form-label">WEIGTH / 100</label>
+                            <input type="text" class="form-control disabled" formControlName="weigth" name="weigth" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="resin_basis" class="form-label">RESIN - BASIS</label>
+                            <input type="text" class="form-control" formControlName="resin_basis" name="resin_basis" (ngModelChange)="calculateResinCot()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="overhead_cost" class="form-label">% OVERHEAD COST</label>
+                            <input type="text" class="form-control" formControlName="overhead_cost" name="overhead_cost" (ngModelChange)="calculateResinCot()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="resin_cot" class="form-label">RESIN COT</label>
+                            <input type="text" class="form-control disabled" formControlName="resin_cot" name="resin_cot" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="total_mat" class="form-label">TOTAL MAT</label>
+                            <input type="text" class="form-control disabled" formControlName="total_mat" name="total_mat" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="GK_percent" class="form-label">GK %</label>
+                            <input type="text" class="form-control" formControlName="GK_percent" name="GK_percent" (ngModelChange)="calculateGK()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="GK" class="form-label">GK</label>
+                            <input type="text" class="form-control disabled" formControlName="GK" name="GK" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="scrap_percent" class="form-label">SCRAP %</label>
+                            <input type="text" class="form-control" formControlName="scrap_percent" name="scrap_percent" (ngModelChange)="calculateMarginScrap()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="margin_scrap" class="form-label">MARGIN SCRAP</label>
+                            <input type="text" class="form-control disabled" formControlName="margin_scrap" name="margin_scrap" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="margin_2" class="form-label">MARGIN 2</label>
+                            <input type="text" class="form-control disabled" formControlName="margin_2" name="margin_2" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="margen_seguridad_percent" class="form-label">% MARGEN SEGURIDAD</label>
+                            <input type="text" class="form-control" formControlName="margen_seguridad_percent" name="margen_seguridad_percent" (ngModelChange)="calculateMarginSecurity()">
+                          </div>
+                          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                            <label for="margen_seguridad" class="form-label">MARGEN SEGURIDAD</label>
+                            <input type="text" class="form-control disabled"  formControlName="margen_seguridad" name="margen_seguridad" [readOnly]="true">
+                          </div>
+                          <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-3">
+                            <button type="submit" class="btn btn-teal-line mt13">Agregar otra materia prima</button>
+                          </div>
+                        </div>
+                      </form>
+    <!-- TABLA MATERIA PRIMA -->
+                      <div class="row mt-3 mb-4">
+                        <div class="table-responsive">
+                          <table class="table table-hover-all">
+                            <thead>
+                              <tr>
+                                <th class="th7"><span>CÓDIGO MATERIA PRIMA</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th1"><span>DESCRIPCIÓN MATERIA PRIMA</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th0"><span>SUPPLIER RESIN</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>PART (g)</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>RUNNER %</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>RUNNER (g)</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>LOSS %</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>WEIGTH / 100</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>RESIN - BASIS</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th0"><span>OVERHEAD COST</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>RESIN COT</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>TOTAL MAT</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>GK %</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>GK</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>SCRAP %</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>MARGIN SCRAP</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th5"><span>MARGIN 2</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th7"><span>% MARGEN SEGURIDAD</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="th7"><span>MARGEN SEGURIDAD</span> <a href="#" class="thFlechas"></a></th>
+                                <th class="text-center th2">ACCIONES</th>
+                              </tr>
+                            </thead>
+                            <tbody *ngIf="array_materiaPrimas.length > 0">
+                              <tr  *ngFor="let item of array_materiaPrimas">
+                                <td>{{item.codigo_materia_prima}}</td>
+                                <td>{{item.descripcion_materia_prima}}</td>
+                                <td>{{item.SUPPLIER_RESIN}}</td>
+                                <td>{{item.parte_g}}</td>
+                                <td>{{item.RUNNER_percent}}</td>
+                                <td>{{item.RUNNER_g}}</td>
+                                <td>{{item.loss_percent}}</td>
+                                <td>{{item.weigth}}</td>
+                                <td>{{item.resin_basis}}</td>
+                                <td>{{item.overhead_cost}}</td>
+                                <td>{{item.resin_cot}}</td>
+                                <td>{{item.total_mat}}</td>
+                                <td>{{item.GK_percent}}</td>
+                                <td>{{item.GK}}</td>
+                                <td>{{item.scrap_percent}}</td>
+                                <td>{{item.margin_scrap}}</td>
+                                <td>{{item.margin_2}}</td>
+                                <td>{{item.margen_seguridad_percent}}</td>
+                                <td>{{item.margen_seguridad}}</td>
+                                <td class="text-center">
+                                  <button type="button" (click)="editarItem(item)" title="Modificar" onclick="window.location.href='consultar-cotizacion.html'" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
+                                  <button type="button" (click)="eliminarItem(item)" title="Eliminar" onclick="window.location.href='estado-resultados.html'" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+    
+                    </div>
+                  </div>
+                </div>
+    <!-- MAQUINA -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-Maquina">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelMaquina" aria-expanded="false" aria-controls="panelMaquina">
+                      Máquina
+                    </button>
+                  </h2>
+                  <div id="panelMaquina" class="accordion-collapse collapse" aria-labelledby="panelHead-Maquina">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">TYPE</label>
+                          <select class="form-select" [(ngModel)]="seletcedMaquina" (ngModelChange)="setCostoMaquina()">
+                            <option value="">- Seleccionar -</option>
+                            <option *ngFor="let item of opcionesMaquinas" [ngValue]="item">{{item.machine_type}}</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">COSTO / H</label>
+                          <input type="text" class="form-control"  [(ngModel)]="precioMaquina"  (ngModelChange)="caclulate_production()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">CYCLUS</label>
+                          <input type="text" class="form-control"  [(ngModel)]="ciclo"  (ngModelChange)="caclulate_production()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PCS / HR</label>
+                          <input type="text" class="form-control"  [(ngModel)]="pcs_hr">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">% INEFICIENCIA</label>
+                          <input type="text" class="form-control"  [(ngModel)]="ineficiencia_percent"  (ngModelChange)="calculateMargin_4()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PRODUCTION</label>
+                          <input type="text" class="form-control" [(ngModel)]="production" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">MARGIN 4</label>
+                          <input type="text" class="form-control" [(ngModel)]="margin_4" disabled >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    <!-- EMPAQUE -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-empaque">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelEmpaque" aria-expanded="false" aria-controls="panelEmpaque">
+                      Empaque y Entrega
+                    </button>
+                  </h2>
+                  <div id="panelEmpaque" class="accordion-collapse collapse" aria-labelledby="panelHead-empaque">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PACKING COST</label>
+                          <input type="text" class="form-control" [(ngModel)]="packing_cost" (ngModelChange)="calculate_PACKING()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PCS / PACKING</label>
+                          <input type="text" class="form-control"  [(ngModel)]="parking_pcs"  (ngModelChange)="calculate_PACKING()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PACKING</label>
+                          <input type="text" class="form-control" disabled  [(ngModel)]="packing">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PCS ENTREGA</label>
+                          <input type="text" class="form-control"  [(ngModel)]="pcs_entrega" (ngModelChange)="caclulate_logisticCost()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">COSTO FLETE</label>
+                          <input type="text" class="form-control"  [(ngModel)]="costo_flete" (ngModelChange)="caclulate_logisticCost()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">COSTO LOGÍSTICO</label>
+                          <input type="text" class="form-control" [(ngModel)]="costo_logistico"  disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">PACKING AND OUTSIDE SERVICE</label>
+                          <input type="text" class="form-control" [(ngModel)]="packing_outside_service" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    <!-- MANTENIMIENTO -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-Mantenimiento">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelMantenimiento" aria-expanded="false" aria-controls="panelMantenimiento">
+                      Mantenimiento Herramental
+                    </button>
+                  </h2>
+                  <div id="panelMantenimiento" class="accordion-collapse collapse" aria-labelledby="panelHead-Mantenimiento">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">HR MTTO</label>
+                          <input type="text" class="form-control" [(ngModel)]="hr_mantto" (ngModelChange)="calculate_tooling_mantiance()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">COST / HR</label>
+                          <input type="text" class="form-control" [(ngModel)]="precioMaquina" (ngModelChange)="caclulate_production()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">PCS / MANTTO</label>
+                          <input type="text" class="form-control" [(ngModel)]="pcs_mtto" (ngModelChange)="calculate_tooling_mantiance()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">TOOLING MANTIANCE</label>
+                          <input type="text" class="form-control" [(ngModel)]="tooling_maintance" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    <!-- TOTALES PIEZAS -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-totalesPiezas">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paneltotalesPiezas" aria-expanded="false" aria-controls="paneltotalesPiezas">
+                      Totales pieza
+                    </button>
+                  </h2>
+                  <div id="paneltotalesPiezas" class="accordion-collapse collapse" aria-labelledby="panelHead-totalesPiezas">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">% OVERHEAD</label>
+                          <input type="text" class="form-control" [(ngModel)]="ovh_ind_porc" (ngModelChange)="calculate_overhead()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">OVERHEAD</label>
+                          <input type="text" class="form-control" [(ngModel)]="overhead" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">MARGIN OVERHEAD</label>
+                          <input type="text" class="form-control" [(ngModel)]="margin_overhead" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">% PROFITT</label>
+                          <input type="text" class="form-control" [(ngModel)]="profitt_percent">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">PROFITT</label>
+                          <input type="text" class="form-control" [(ngModel)]="profitt" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">MARGIN PROFIT</label>
+                          <input type="text" class="form-control" [(ngModel)]="margin_profitt" disabled>
+                        </div>
+    
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">UNIT PRICE</label>
+                          <input type="text" class="form-control" [(ngModel)]="unit_price" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">MARGIN TOTAL</label>
+                          <input type="text" class="form-control" [(ngModel)]="margin_total" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    <!-- TOTALES -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelHead-Totales">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelTotales" aria-expanded="false" aria-controls="panelTotales">
+                      Totales
+                    </button>
+                  </h2>
+                  <div id="panelTotales" class="accordion-collapse collapse" aria-labelledby="panelHead-Totales">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">Kg MATERIAL</label>
+                          <input type="text" class="form-control" [(ngModel)]="kg_material" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label">MOQ</label>
+                          <input type="text" class="form-control" [(ngModel)]="moq" disabled>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">EAU</label>
+                          <input type="text" class="form-control" [(ngModel)]="eau" (ngModelChange)="calculate_pcs_mtto()">
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
+                          <label for="" class="form-label txtLabel-lg">Total</label>
+                          <input type="text" class="form-control" [(ngModel)]="total" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row d-flex justify-content-center mt-5">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                  <button type="button" (click)="addItemCotizacion()" class="btn btn-teal btnCentrar">Agregar ítem</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="my-3 p-4 bg-body rounded shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th class="th0"><span>CÓDIGO PARTE</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th4"><span>DESCRIPCIÓN PARTE</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>UNIT PRICE</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>MATERIALES</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>% MATERIALES</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>PRODUCCIÓN</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>% PRODUCCIÓN</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th7"><span>EMPAQUE Y LOGÍSTICA</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th7"><span>% EMPAQUE Y LOGÍSTICA</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th0"><span>MANTENIMIENTO</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th0"><span>% MANTENIMIENTO</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>Kg MATERIAL</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>EAU</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>TOTAL</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="text-center th2">ACCIONES</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of array_items_cotizacion">
+                  <!-- PRODUCTO -->
+                  <tr>
+                    <td class="fw-bolder">{{item.codigo_parte}}</td>
+                    <td>{{ item.descripcion_parte }}</td>
+                    <td class="tdIzq">${{item.unit_price}}</td>
+                    <td class="tdIzq">${{item.total_materia_prima}}</td>
+                    <td class="tdIzq">{{item.total_materia_prima/item.unit_price}}%</td>
+                    <td class="tdIzq">${{obtener_totalProduction(item)}}</td>
+                    <td class="tdIzq">{{obtener_totalProduction(item)/item.unit_price}}%</td>
+                    <td class="tdIzq">${{obtener_totalEmpaqueLogistica(item)}}</td>
+                    <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item)/item.unit_price}}%</td>
+                    <td class="tdIzq">$</td>
+                    <td class="tdIzq">%</td>
+                    <td class="tdIzq"></td>
+                    <td class="tdIzq"></td>
+                    <td class="tdIzq">$</td>
+                    <td class="text-center">
+                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modificar" onclick="window.location.href='consultar-cotizacion.html'" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
+                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar" onclick="window.location.href='estado-resultados.html'" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                    </td>
+                  </tr>
+                  <!-- EL SIGUIENTE TR forma parte de la información de arriba -->
+                  <tr class="subTable">
+                    <td colspan="4" class="tdInt"> 
+                      <table class="table table-materia mt-2 table-hover-materia">
+                        <tr *ngFor="let item_mp of item.materias_primas">
+                          <td class="tdHead">{{item_mp.descripcion_materia_prima}}</td>
+                          <td class="tdHead-Descripcion">{{item_mp.descripcion_materia_prima}}</td>
+                          <td class="tdIzq tdHead-Materiales">${{item_mp.total_mat}}</td>
+                        </tr>
+                      </table>
+                    </td> 
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row justify-content-end mt-3">
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 totales">
+                <div class="row">
+                  <div class="col-1 d-none d-sm-block"></div>
+                  <div class="col-12 col-sm-11 contTotales">
+                    <span class="float-start">TOTAL</span>
+                    <span class="float-end">$899,698.94</span>
+                  </div>
+                  <div class="col-1"></div>
+                </div>
+              </div>     
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 totales">
+                <div class="row">
+                  <div class="col-1 d-none d-md-block"></div>
+                  <div class="col-12 col-md-11 contTotales">
+                    <span class="float-start">IMPUESTOS</span>
+                    <span class="float-end">$899,698.94</span>
+                  </div>
+                </div>
+              </div> 
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 totales">
+                <div class="row">
+                  <div class="col-12 contTotales">
+                    <span class="float-start fw-bolder">GRAN TOTAL</span>
+                    <span class="float-end fw-bolder">$899,698.94</span>
+                  </div>
+                </div>
+              </div>  
+            </div>
+            <!-- termina tabla -->
+            <div class="row mt-5 mb-4">
+              <div class="col-6">
+                <button type="button" (click)="guardarCotizacion()" class="btn btn-teal float-end">Guardar</button> 
+              </div>
+              <div class="col-6">
+                <button type="button" class="btn btn-gris float-start" onclick="history.back()">Cancelar</button> 
+              </div>
+            </div>
+          </div>
+    
+    
+        </main>
