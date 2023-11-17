@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { itemsCotizacion } from 'src/app/interfaces/ItemsCotizacion.interface';
 import request_Maquinas, { Maquinas_response } from 'src/app/interfaces/Maquinas.interface';
-import Maquinas from 'src/app/interfaces/Maquinas.interface';
 import MateriaPrima from 'src/app/interfaces/MateriaPrima.interface';
 import Request_ParamIndustria from 'src/app/interfaces/Params_Industria.interace';
+import { Request_cotizacion_save } from 'src/app/interfaces/Request_Cotizaciones.interface';
 import { CotizadorService } from 'src/app/services/cotizador.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-form-cotizador',
@@ -72,7 +74,11 @@ export class FormCotizadorComponent {
 
   array_items_cotizacion:itemsCotizacion[] = [];
 
-  constructor(private cotizadorService:CotizadorService, private fb: FormBuilder){
+  total_cotizacion: number = 0;
+  impuetsos_cotizacion:number = 0;
+  gran_total_cotizacion: number= 0;
+
+  constructor(private cotizadorService:CotizadorService, private fb: FormBuilder, private toast:ToastService, private route:Router){
     this.form_materiaPrima = this.fb.group({
       codigo_materia_prima:[null, [Validators.required]],
       descripcion_materia_prima:[null, [Validators.required]],
@@ -98,7 +104,7 @@ export class FormCotizadorComponent {
 
   ngOnInit(): void {
     this.initCombos();
-    /* this.array_items_cotizacion.push({
+/*     this.array_items_cotizacion.push({
       "codigo_parte": "1",
       "descripcion_parte": "Metal blindado",
       "flag_nueva_parte": false,
@@ -178,23 +184,38 @@ export class FormCotizadorComponent {
       "moq": "518400",
       "eau": "2",
       "total": "19412.287750659387"
-    }) */
+    })
+    this.obtener_totalCotizacfion(); */
   }
 
   obtener_totalProduction(item:any):number {
-    const Monto_base_Prod = item.production;
+    const Monto_base_Prod = Number(item.production);
     const Monto_overhead_Prod = (item.production*item.percent_overhead);
-    const Monto_profit_Prod = ((item.production+Monto_overhead_Prod)/(1-(item.percent_proffit/100)))-(item.production+Monto_overhead_Prod);
+    const Monto_profit_Prod = ((Number(item.production)+Monto_overhead_Prod)/(1-(Number(item.percent_proffit)/100)))-(Number(item.production)+Monto_overhead_Prod);
     const total_produccion = Monto_base_Prod + Monto_overhead_Prod + Monto_profit_Prod;
     return total_produccion;
   }
 
   obtener_totalEmpaqueLogistica(item:any): number{
-    const Monto_base_emp_log = item.packing_and_outside_service;
-    const Monto_overhead_emp_log = (item.packing_and_outside_service * item.percent_overhead);
-    const Monto_profit_emp_log = ((item.packing_and_outside_service+Monto_overhead_emp_log)/(1-(item.percent_proffit/100)))-(item.packing_and_outside_service+Monto_overhead_emp_log)
+    const Monto_base_emp_log = Number(item.packing_and_outside_service);
+    const Monto_overhead_emp_log = (Number(item.packing_and_outside_service) * Number(item.percent_overhead));
+    const Monto_profit_emp_log = ((Number(item.packing_and_outside_service)+Monto_overhead_emp_log)/(1-(Number(item.percent_proffit)/100)))-(Number(item.packing_and_outside_service)+Monto_overhead_emp_log)
     const total_empaque_logistica = Monto_base_emp_log + Monto_overhead_emp_log + Monto_profit_emp_log;
     return total_empaque_logistica
+  }
+
+  obtener_mantenimiento(item:any):number{
+    const Monto_base_mantto = Number(item.tooling_mantiance);
+    const Monto_overhead_mantto = (Number(item.tooling_mantiance)*Number(item.percent_overhead))
+    const Monto_profit_mantto = ((Number(item.tooling_mantiance)+Monto_overhead_mantto)/(1-(Number(item.percent_proffit)/100)))-(Number(item.tooling_mantiance)+Monto_overhead_mantto)
+    const total_mantenimiento = Monto_base_mantto + Monto_overhead_mantto + Monto_profit_mantto;
+    return total_mantenimiento;
+  }
+
+  obtener_totalCotizacfion(){
+    this.total_cotizacion = this.array_items_cotizacion.reduce((acumulador:any, objeto) => acumulador + Number(objeto.total), 0);
+    this.impuetsos_cotizacion = 0;
+    this.gran_total_cotizacion= this.total_cotizacion + this.impuetsos_cotizacion;
   }
 
   isProgrammaticChange_2:boolean = false;
@@ -262,7 +283,7 @@ export class FormCotizadorComponent {
     // Realiza tu cálculo aquí
     const calculatedRunnerG = this.form_materiaPrima.value.parte_g * this.form_materiaPrima.value.RUNNER_percent;
     // Actualiza el valor del campo RUNNER_g
-    this.form_materiaPrima.get('RUNNER_g')?.setValue(calculatedRunnerG ? calculatedRunnerG : '');
+    this.form_materiaPrima.get('RUNNER_g')?.setValue(calculatedRunnerG ? calculatedRunnerG.toFixed(4) : '');
     this.calculateWeigth();
   }
 
@@ -392,7 +413,7 @@ export class FormCotizadorComponent {
   }
 
   calculate_packingOutsideService(){
-    const result = this.packing+this.costo_logistico;
+    const result = Number(this.packing)+ Number(this.costo_logistico);
     this.packing_outside_service = result ? result : '';
     this.calculate_overhead();
   }
@@ -495,6 +516,10 @@ export class FormCotizadorComponent {
   setMateriaPrima(){
     let codigoMateriaPrima = null;
     let desripcionMateriaPrima = null;
+    if(this.form_materiaPrima.invalid){
+      this.toast.warning("Completa todos los campos de Materia Prima","Campos incompletos");
+      return;
+    }
     if (typeof  this.form_materiaPrima.value.codigo_materia_prima === 'object') {
       codigoMateriaPrima = this.form_materiaPrima.value.codigo_materia_prima.codigo_material;
     }else{
@@ -529,25 +554,79 @@ export class FormCotizadorComponent {
     }
     console.log(this.form_materiaPrima.value);
     this.array_materiaPrimas.push(obj);
-
+    this.toast.success("Materia prima agregada al listado","Agregado con exito");
+    this.form_materiaPrima.reset();
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
 
-  eliminarItem(item:MateriaPrima){
+  eliminarItem(index: number){
+    this.array_materiaPrimas.splice(index, 1);
+    this.toast.info("Materia prima eliminada del listado","Eliminado con exito");
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
 
-  editarItem(item:MateriaPrima){
-
+  flag_edit_materiaP:boolean = false;
+  flag_edit_index_materiaP:number = -1;
+  editarItem(index:number){
+    this.flag_edit_materiaP = true;
+    this.flag_edit_index_materiaP = index;
+    const objetoEditar:MateriaPrima = this.array_materiaPrimas[index];
+    const obj_materiaprima = this.materialesOptions.find(element => element.codigo_material == objetoEditar.codigo_materia_prima);
+    objetoEditar.codigo_materia_prima = obj_materiaprima;
+    objetoEditar.descripcion_materia_prima = obj_materiaprima;
+    this.form_materiaPrima.setValue(objetoEditar);
   }
 
   cancelarEditarItem(){
-
+    this.flag_edit_materiaP = false;
+    this.flag_edit_index_materiaP = -1;
+    this.form_materiaPrima.reset();
   }
 
-  confirmEditarItem(option:number,event:any){
+  confirmEditarItem(){
+    let codigoMateriaPrima = null;
+    let desripcionMateriaPrima = null;
+    if(this.form_materiaPrima.invalid){
+      this.toast.warning("Completa todos los campos de Materia Prima","Campos incompletos");
+      return;
+    }
+    if (typeof  this.form_materiaPrima.value.codigo_materia_prima === 'object') {
+      codigoMateriaPrima = this.form_materiaPrima.value.codigo_materia_prima.codigo_material;
+    }else{
+      codigoMateriaPrima = this.form_materiaPrima.value.codigo_materia_prima;
+    }
+    if (typeof this.form_materiaPrima.value.descripcion_materia_prima === 'object') {
+      desripcionMateriaPrima = this.form_materiaPrima.value.descripcion_materia_prima.nombre_material;
+    }else{
+      desripcionMateriaPrima = this.form_materiaPrima.value.descripcion_materia_prima;
+    }
+
+    let obj:MateriaPrima = {
+      codigo_materia_prima: codigoMateriaPrima,
+      descripcion_materia_prima: desripcionMateriaPrima,
+      SUPPLIER_RESIN: this.form_materiaPrima.value.SUPPLIER_RESIN,
+      parte_g: this.form_materiaPrima.value.parte_g,
+      RUNNER_percent: this.form_materiaPrima.value.RUNNER_percent,
+      RUNNER_g: this.form_materiaPrima.value.RUNNER_g,
+      loss_percent: this.form_materiaPrima.value.loss_percent,
+      weigth: this.form_materiaPrima.value.weigth,
+      resin_basis: this.form_materiaPrima.value.resin_basis,
+      overhead_cost: this.form_materiaPrima.value.overhead_cost,
+      resin_cot: this.form_materiaPrima.value.resin_cot,
+      total_mat: this.form_materiaPrima.value.total_mat,
+      GK_percent: this.form_materiaPrima.value.GK_percent,
+      GK:this.form_materiaPrima.value.GK,
+      scrap_percent: this.form_materiaPrima.value.scrap_percent,
+      margin_scrap: this.form_materiaPrima.value.margin_scrap,
+      margin_2: this.form_materiaPrima.value.margin_2,
+      margen_seguridad_percent: this.form_materiaPrima.value.margen_seguridad_percent,
+      margen_seguridad: this.form_materiaPrima.value.margen_seguridad,
+    }
+    this.array_materiaPrimas[this.flag_edit_index_materiaP] = obj;
+    this.cancelarEditarItem();
+    this.toast.success("Materia prima editada","Edicion con exito");
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
@@ -555,6 +634,10 @@ export class FormCotizadorComponent {
   //ITEM COTIZACION, DE PRODUCTO
   flag_nueva_parte: boolean = false;
   addItemCotizacion(){
+    if (this.array_materiaPrimas.length <= 0) {
+      this.toast.warning("Se necesita minimo una materia prima","Sin materias primas");
+      return;
+    }
     const obj_materias:any =  this.calculate_totals_materials();
     let obj:itemsCotizacion = {
       codigo_parte: (typeof  this.selectedParte_codigo === 'object') ? this.selectedParte_codigo.codigo_parte  : this.selectedParte_codigo,
@@ -594,23 +677,86 @@ export class FormCotizadorComponent {
       eau: this.eau,
       total: this.total
     }
-    
-    console.log(obj);
-
-    //this.limpiarSecciones();
+    this.array_items_cotizacion.push(obj);
+    this.toast.success("Item de Cotización agregada con exito","Item agregado");
+    this.obtener_totalCotizacfion();
+    this.limpiarSecciones();
+    console.log('item agregado',obj);
   }
-
-  
 
   guardarCotizacion(){
-
+    this.toast.charge("procesando petición","Cargando...");
+    console.log("items cotizacion",this.array_items_cotizacion);
+    const obj_send:Request_cotizacion_save = {
+      cliente_prospecto: this.selectedCliente,
+      tipo_cliente: this.cliente_selected,
+      tipo_proceso: this.proceso_selected,
+      precios: this.precio_selected,
+      vendedor: this.selectedVendedor,
+      cotizacion_array: this.array_items_cotizacion,
+      total: Number(this.total_cotizacion.toFixed(2)),
+      impuestos: this.impuetsos_cotizacion,
+      gran_total: this.gran_total_cotizacion
+    }
+    this.cotizadorService.postGuardarCotizacion(obj_send).subscribe((resp:any)=>{
+      this.toast.remove();
+      if (resp.status == 500) {
+        this.toast.error('Verifique todos los campos de la cotización e intentelo denuevo','Error en Agregar Cotización');
+        return;
+      }
+      console.log(resp);
+      this.toast.success('Se agrego corrrectamente la cotización','Cotización Agregada');
+      this.route.navigate(['/cotizador']);
+    });
   }
 
 
-  limpiarSecciones(){
+  limpiarSecciones(){ 
     this.form_materiaPrima.reset();
-    this.selectedParte_codigo = '';
-    this.selectedParte_descripcion = '';
+    this.selectedParte_codigo = null;
+    this.selectedParte_descripcion = null;
     this.cav = '';
+
+    this.array_materiaPrimas = [];
+    this.seletcedMaquina = {};
+    this.precioMaquina = '';
+    this.ciclo = '';
+    this.pcs_hr = '';
+    this.ineficiencia_percent='';
+    this.production = '';
+    this.margin_4= '';
+
+    this.packing_cost = '';
+    this.parking_pcs = '';
+    this.packing = '';
+    this.pcs_entrega = '';
+    this.costo_flete = '';
+    this.costo_logistico= '';
+
+    this.hr_mantto= '';
+    this.pcs_mtto='';
+    this.tooling_maintance='';
+
+    this.packing_cost='';
+    this.parking_pcs='';
+    this.packing='';
+    this.pcs_entrega='';
+    this.costo_flete='';
+    this.costo_logistico='';
+    this.packing_outside_service='';
+
+    this.ovh_ind_porc='';
+    this.overhead='';
+    this.margin_overhead='';
+    this.profitt_percent='';
+    this.profitt='';
+    this.margin_profitt='';
+    this.unit_price='';
+    this.margin_total='';
+    
+    this.kg_material='';
+    this.eau='';
+    this.moq='';
+    this.total='';
   }
 }

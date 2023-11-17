@@ -6,8 +6,8 @@
                 <h2>Generar cotización</h2>
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Ventas</a></li>
-                    <li class="breadcrumb-item"><a href="index.html">Cotizador</a></li>
+                    <li class="breadcrumb-item"><a >Ventas</a></li>
+                    <li class="breadcrumb-item"><a >Cotizador</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Generar cotización</li>
                   </ol>
                 </nav>
@@ -107,7 +107,7 @@
                   </h2>
                   <div id="panelmateriaPrima" class="accordion-collapse collapse show" aria-labelledby="panelHead-materiaPrima">
                     <div class="accordion-body">
-                      <form [formGroup]="form_materiaPrima" (submit)="setMateriaPrima()" >
+                      <form [formGroup]="form_materiaPrima" (submit)="flag_edit_materiaP ? confirmEditarItem() : setMateriaPrima() " >
                         <div class="row">
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="codigo_materia_prima" class="form-label">CÓDIGO MATERIA PRIMA</label>
@@ -198,7 +198,8 @@
                             <input type="text" class="form-control disabled"  formControlName="margen_seguridad" name="margen_seguridad" [readOnly]="true">
                           </div>
                           <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-3">
-                            <button type="submit" class="btn btn-teal-line mt13">Agregar otra materia prima</button>
+                            <button type="submit" class="btn btn-teal-line mt13">{{flag_edit_materiaP ? 'Editar materia prima' : 'Agregar otra materia prima'}}</button>
+                            <button type="button" (click)="cancelarEditarItem()" class="btn btn-outline-danger mt13" style="margin-left: 10px;" *ngIf="flag_edit_materiaP">Cancelar edicion</button>
                           </div>
                         </div>
                       </form>
@@ -231,7 +232,7 @@
                               </tr>
                             </thead>
                             <tbody *ngIf="array_materiaPrimas.length > 0">
-                              <tr  *ngFor="let item of array_materiaPrimas">
+                              <tr  *ngFor="let item of array_materiaPrimas; let i = index">
                                 <td>{{item.codigo_materia_prima}}</td>
                                 <td>{{item.descripcion_materia_prima}}</td>
                                 <td>{{item.SUPPLIER_RESIN}}</td>
@@ -252,8 +253,8 @@
                                 <td>{{item.margen_seguridad_percent}}</td>
                                 <td>{{item.margen_seguridad}}</td>
                                 <td class="text-center">
-                                  <button type="button" (click)="editarItem(item)" title="Modificar" onclick="window.location.href='consultar-cotizacion.html'" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
-                                  <button type="button" (click)="eliminarItem(item)" title="Eliminar" onclick="window.location.href='estado-resultados.html'" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                                  <button type="button" (click)="editarItem(i)" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
+                                  <button type="button" (click)="eliminarItem(i)" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
                                 </td>
                               </tr>
                             </tbody>
@@ -501,14 +502,14 @@
                     <td class="tdIzq">{{obtener_totalProduction(item)/item.unit_price}}%</td>
                     <td class="tdIzq">${{obtener_totalEmpaqueLogistica(item)}}</td>
                     <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item)/item.unit_price}}%</td>
-                    <td class="tdIzq">$</td>
-                    <td class="tdIzq">%</td>
-                    <td class="tdIzq"></td>
-                    <td class="tdIzq"></td>
-                    <td class="tdIzq">$</td>
+                    <td class="tdIzq">${{obtener_mantenimiento(item)}}</td>
+                    <td class="tdIzq">%{{obtener_mantenimiento(item)/item.unit_price}}</td>
+                    <td class="tdIzq">{{item.kg_material}}</td>
+                    <td class="tdIzq">{{item.eau}}</td>
+                    <td class="tdIzq">${{item.total}}</td>
                     <td class="text-center">
-                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modificar" onclick="window.location.href='consultar-cotizacion.html'" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
-                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar" onclick="window.location.href='estado-resultados.html'" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
+                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
                     </td>
                   </tr>
                   <!-- EL SIGUIENTE TR forma parte de la información de arriba -->
@@ -532,7 +533,7 @@
                   <div class="col-1 d-none d-sm-block"></div>
                   <div class="col-12 col-sm-11 contTotales">
                     <span class="float-start">TOTAL</span>
-                    <span class="float-end">$899,698.94</span>
+                    <span class="float-end">{{total_cotizacion | currency}}</span>
                   </div>
                   <div class="col-1"></div>
                 </div>
@@ -542,7 +543,7 @@
                   <div class="col-1 d-none d-md-block"></div>
                   <div class="col-12 col-md-11 contTotales">
                     <span class="float-start">IMPUESTOS</span>
-                    <span class="float-end">$899,698.94</span>
+                    <span class="float-end">{{impuetsos_cotizacion | currency}}</span>
                   </div>
                 </div>
               </div> 
@@ -550,7 +551,7 @@
                 <div class="row">
                   <div class="col-12 contTotales">
                     <span class="float-start fw-bolder">GRAN TOTAL</span>
-                    <span class="float-end fw-bolder">$899,698.94</span>
+                    <span class="float-end fw-bolder">{{gran_total_cotizacion | currency}}</span>
                   </div>
                 </div>
               </div>  

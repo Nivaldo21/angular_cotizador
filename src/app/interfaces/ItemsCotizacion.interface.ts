@@ -1,19 +1,5 @@
 import MateriaPrima from "./MateriaPrima.interface";
 
-export interface cotizacion {
-    cliente_prospecto: string;
-    flag_es_prospecto: boolean;
-    flag_nuevo_cliente_prospecto: boolean;
-    tipo_cliente: string;
-    tipo_proceso: string;
-    precios: string;
-    vendedor: string;
-    items_cotizacion?: itemsCotizacion[];
-    total?: string;
-    impuestos?: string;
-    gran_total?: string;
-}
-
 export interface itemsCotizacion{
     codigo_parte?:string;
     descripcion_parte?: string;

@@ -9,7 +9,7 @@ import { EstadoResultadosComponent } from './pages/estado-resultados/estado-resu
 import { HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
@@ -27,11 +27,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     NgSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-bottom-center',
-      tapToDismiss: false,
-      timeOut: 5000
-    }),
+    ToastrModule.forRoot(),
     NavbarComponent
   ],
   providers: [    

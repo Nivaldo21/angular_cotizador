@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import Request_ParamIndustria from '../interfaces/Params_Industria.interace';
 import Maquinas from '../interfaces/Maquinas.interface';
 import request_Maquinas from '../interfaces/Maquinas.interface';
-import { Request_Cotizaciones } from '../interfaces/Request_Cotizaciones.interface';
+import { Request_Cotizaciones, Request_cotizacion_save } from '../interfaces/Request_Cotizaciones.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,12 @@ export class CotizadorService {
 
   constructor(private http:HttpClient) { }
 
-  getCotizaciones(data: Request_Cotizaciones){
+  getCotizaciones(data: Request_Cotizaciones):Observable<any>{
     return this.http.post(this.apiUrl+'/buscarCotizaciones',data);
+  }
+
+  postGuardarCotizacion(data: Request_cotizacion_save){
+    return this.http.post(this.apiUrl+'/guardarCotizacion',data);
   }
 
   getClientesProspectos(){
