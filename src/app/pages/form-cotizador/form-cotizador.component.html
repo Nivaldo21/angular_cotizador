@@ -490,7 +490,7 @@
                     <th class="text-center th2">ACCIONES</th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let item of array_items_cotizacion">
+                <tbody *ngFor="let item of array_items_cotizacion; let i = index">
                   <!-- PRODUCTO -->
                   <tr>
                     <td class="fw-bolder">{{item.codigo_parte}}</td>
@@ -508,16 +508,16 @@
                     <td class="tdIzq">{{item.eau}}</td>
                     <td class="tdIzq">${{item.total}}</td>
                     <td class="text-center">
-                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
-                      <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                      <button type="button" (click)="editarItemCot(item)" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
+                      <button type="button" (click)="eliminarItemCot(i)" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
                     </td>
                   </tr>
                   <!-- EL SIGUIENTE TR forma parte de la información de arriba -->
                   <tr class="subTable">
                     <td colspan="4" class="tdInt"> 
                       <table class="table table-materia mt-2 table-hover-materia">
-                        <tr *ngFor="let item_mp of item.materias_primas">
-                          <td class="tdHead">{{item_mp.descripcion_materia_prima}}</td>
+                        <tr *ngFor="let item_mp of item.materias_primas; let i = index">
+                          <td class="tdHead">Materia Prima {{i + 1}}</td>
                           <td class="tdHead-Descripcion">{{item_mp.descripcion_materia_prima}}</td>
                           <td class="tdIzq tdHead-Materiales">${{item_mp.total_mat}}</td>
                         </tr>
@@ -557,7 +557,7 @@
               </div>  
             </div>
             <!-- termina tabla -->
-            <div class="row mt-5 mb-4">
+            <div class="row mt-5 mb-4" *ngIf="action === '1'">
               <div class="col-6">
                 <button type="button" (click)="guardarCotizacion()" class="btn btn-teal float-end">Guardar</button> 
               </div>
@@ -565,7 +565,101 @@
                 <button type="button" class="btn btn-gris float-start" onclick="history.back()">Cancelar</button> 
               </div>
             </div>
+
+            <div class="row mt-5 mb-4" *ngIf="action === '2'">
+              <div class="col-6">
+                <button type="button"  data-bs-toggle="modal" data-bs-target="#PDFcotizacion" class="btn btn-teal float-end">PDF Ctozacion</button> 
+              </div>
+              <div class="col-6">
+                <button type="button" class="btn btn-gris float-start" onclick="history.back()">Cancelar</button> 
+              </div>
+            </div>
+          </div> 
+</main>
+
+<!-- MODAL PDF -->
+<div class="modal fade" id="PDFcotizacion" tabindex="-1" aria-labelledby="modalPDF" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalPDF">Generar PDF Cotización</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <h6>Tipo de documento</h6>
+          <div class="row mb-4">
+            <div class="col-5">
+              <input class="form-check-input" type="radio" name="tipoDoc" id="tipoDoc1">
+              <label class="form-check-label" for="tipoDoc1">Normal</label>
+            </div>
+            <div class="col-5">
+              <input class="form-check-input" type="radio" name="tipoDoc" id="tipoDoc2">
+              <label class="form-check-label" for="tipoDoc2">Ampliado</label>
+            </div>
+            <div class="col-5"></div>
           </div>
-    
-    
-        </main>
+          <h6>Condiciones</h6>
+          <div class="row mb-4">
+            <div class="col-12 mb-2">
+              <div class="row">
+                <div class="col-1">
+                  <input class="form-check-input float-end" type="checkbox" value="" id="empaqueEstandar">
+                </div>
+                <div class="col-9 col-sp">
+                  <label class="form-check-label" for="empaqueEstandar">Empaque estándar.</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1">
+                  <input class="form-check-input float-end" type="checkbox" value="" id="materiaPrima">
+                </div>
+                <div class="col-9 col-sp">
+                  <label class="form-check-label" for="materiaPrima">Materia prima proporcionada por el cliente.</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1">
+                  <input class="form-check-input float-end" type="checkbox" value="" id="OCmoq">
+                </div>
+                <div class="col-9 col-sp">
+                  <label class="form-check-label" for="OCmoq">OC debe cumplir MOQ.</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1">
+                  <input class="form-check-input float-end" type="checkbox" value="" id="EntregaCliente">
+                </div>
+                <div class="col-9 col-sp">
+                  <label class="form-check-label" for="EntregaCliente">Entrega en planta del cliente.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-sm-6 mb-3">
+              <label for="" class="form-label txtLabel-lg">TIEMPO DE ENTREGA</label>
+              <input type="text" class="form-control">
+            </div>
+            <div class="col-12 col-sm-6 mb-3">
+              <label for="" class="form-label txtLabel-lg">CONDICIONES DE PAGO</label>
+              <input type="text" class="form-control">
+            </div>
+            <div class="col-12 col-sm-6 mb-3">
+              <label for="" class="form-label txtLabel-lg">VIGENCIA</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row justify-content-center rowBotones">
+        <div class="col-6 mb-3">
+          <button type="button" class="btn btn-teal float-end" data-bs-dismiss="modal">Generar</button>
+        </div>
+        <div class="col-6 mb-3">
+          <button type="button" class="btn btn-gris float-start" data-bs-dismiss="modal">Salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

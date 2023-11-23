@@ -7,6 +7,10 @@ export interface itemsCotizacion{
     cav?:string;
     materias_primas?: MateriaPrima[];
     total_materia_prima: number;
+    total_materia_prima_gk: number;
+    total_materia_prima_margen_seguridad: number;
+    total_materia_prima_margin_2: number;
+    total_materia_prima_parte_g: number;
 
     tipo_maquina?: string;
     costo_hora_maquina?:number;
@@ -42,4 +46,11 @@ export interface itemsCotizacion{
     moq?: string;
     eau?: string;
     total?: string;
+
+    tabla_total_produccion?: number;
+    tabla_produccion_porc?:  number;
+    tabla_total_empaque_logistica?:  number;
+    tabla_empaque_logistica_porc?:  number;
+    tabla_total_mantenimiento?:  number;
+    tabla_mantenimiento_porc?:  number;
 }

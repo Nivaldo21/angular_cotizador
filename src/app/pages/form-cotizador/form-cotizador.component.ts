@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { itemsCotizacion } from 'src/app/interfaces/ItemsCotizacion.interface';
@@ -15,6 +15,8 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./form-cotizador.component.css']
 })
 export class FormCotizadorComponent {
+
+  @Input() action?:string;
   
   clienteOptions:any[] = [];
   selectedCliente:any = null;
@@ -104,88 +106,6 @@ export class FormCotizadorComponent {
 
   ngOnInit(): void {
     this.initCombos();
-/*     this.array_items_cotizacion.push({
-      "codigo_parte": "1",
-      "descripcion_parte": "Metal blindado",
-      "flag_nueva_parte": false,
-      "cav": "12",
-      "materias_primas": [
-          {
-              "codigo_materia_prima": "M1",
-              "descripcion_materia_prima": "Lamina reforzada",
-              "SUPPLIER_RESIN": "12",
-              "parte_g": "22",
-              "RUNNER_percent": "2",
-              "RUNNER_g": "44",
-              "loss_percent": "2",
-              "weigth": "0.0018",
-              "resin_basis": "30",
-              "overhead_cost": "10.3",
-              "resin_cot": "3309",
-              "total_mat": "0.054",
-              "GK_percent": "3",
-              "GK": "0.162",
-              "scrap_percent": "2.2",
-              "margin_scrap": "66",
-              "margin_2": "5.464799999999999",
-              "margen_seguridad_percent": "2",
-              "margen_seguridad": "10.929599999999999"
-          },
-          {
-              "codigo_materia_prima": "M2",
-              "descripcion_materia_prima": "Cristal fundido",
-              "SUPPLIER_RESIN": "10",
-              "parte_g": "22",
-              "RUNNER_percent": "2",
-              "RUNNER_g": "44",
-              "loss_percent": "2",
-              "weigth": "0.0018",
-              "resin_basis": "33",
-              "overhead_cost": "10.3",
-              "resin_cot": "3639.9",
-              "total_mat": "0.0594",
-              "GK_percent": "3",
-              "GK": "0.1782",
-              "scrap_percent": "2.2",
-              "margin_scrap": "72.60000000000001",
-              "margin_2": "6.011279999999999",
-              "margen_seguridad_percent": "2",
-              "margen_seguridad": "12.022559999999999"
-          }
-      ],
-      "total_materia_prima": 0.1134,
-      "tipo_maquina": "Monotiraz",
-      "costo_hora_maquina": 20.2,
-      "cyclus": "2",
-      "pcs_hr": "21600",
-      "ineficiencia_porcentaje": "11.2",
-      "production": "0.0009351851851851852",
-      "margin_4": "0.010474074074074073",
-      "packing_cost": "2",
-      "pcs_packing": "2",
-      "packing": "1",
-      "pcs_entrega": "2",
-      "costo_flete": "2",
-      "costo_logistico": "1",
-      "packing_and_outside_service": "2",
-      "hr_mtto": "2",
-      "cost_hr": "20.2",
-      "pcs_mantto": "0.16666666666666666",
-      "tooling_mantiance": "242.4",
-      "percent_overhead": "12.11",
-      "overhead": "2965.1884210925928",
-      "margin_overhead": "417.05282743703697",
-      "percent_proffit": "2.32",
-      "proffit": "6496.100919051915",
-      "margin_profit": "10.723386325816705",
-      "unit_price": "9706.143875329693",
-      "margin_total": "462.21492783692776",
-      "kg_material": "88",
-      "moq": "518400",
-      "eau": "2",
-      "total": "19412.287750659387"
-    })
-    this.obtener_totalCotizacfion(); */
   }
 
   obtener_totalProduction(item:any):number {
@@ -214,7 +134,7 @@ export class FormCotizadorComponent {
 
   obtener_totalCotizacfion(){
     this.total_cotizacion = this.array_items_cotizacion.reduce((acumulador:any, objeto) => acumulador + Number(objeto.total), 0);
-    this.impuetsos_cotizacion = 0;
+    this.impuetsos_cotizacion = this.total_cotizacion * .16;
     this.gran_total_cotizacion= this.total_cotizacion + this.impuetsos_cotizacion;
   }
 
@@ -226,9 +146,9 @@ export class FormCotizadorComponent {
         // Establece la bandera para evitar llamadas recursivas
         this.isProgrammaticChange_2 = true;
         if (option === 1) {
-          this.selectedParte_descripcion = material.nombre_parte?material.nombre_parte : null;
+          if (material.nombre_parte)  this.selectedParte_descripcion = material.nombre_parte;
         } else if (option === 2) {
-          this.selectedParte_codigo = material.codigo_parte ?material.codigo_parte : null;
+          if ( material.codigo_parte) this.selectedParte_codigo = material.codigo_parte;
         }
         // Restablece la bandera después de hacer los cambios
         this.isProgrammaticChange_2 = false;
@@ -243,13 +163,18 @@ export class FormCotizadorComponent {
       if (!this.isProgrammaticChange) {
         // Establece la bandera para evitar llamadas recursivas
         this.isProgrammaticChange = true;
+        console.log("material",material);
         if (option === 1) {
-          this.form_materiaPrima.get('descripcion_materia_prima')?.setValue(material.nombre_material?material.nombre_material : null);
-          this.form_materiaPrima.get('resin_basis')?.setValue(material.resin_basis? material.resin_basis: '');
+          if (material.nombre_material) {
+            this.form_materiaPrima.get('descripcion_materia_prima')?.setValue(material.nombre_material);
+            this.form_materiaPrima.get('resin_basis')?.setValue(material.resin_basis? material.resin_basis: '');
+          }
           this.calculateResinCot();
         } else if (option === 2) {
-          this.form_materiaPrima.get('codigo_materia_prima')?.setValue(material.codigo_material ?material.codigo_material : null);
-          this.form_materiaPrima.get('resin_basis')?.setValue(material.resin_basis ? material.resin_basis : '');
+          if (material.codigo_material) {
+            this.form_materiaPrima.get('codigo_materia_prima')?.setValue(material.codigo_material);
+            this.form_materiaPrima.get('resin_basis')?.setValue(material.resin_basis ? material.resin_basis : '');
+          }
           this.calculateResinCot();
         }
         // Restablece la bandera después de hacer los cambios
@@ -646,6 +571,10 @@ export class FormCotizadorComponent {
       cav: this.cav,
       materias_primas: this.array_materiaPrimas,
       total_materia_prima: obj_materias.totalMateriales,
+      total_materia_prima_gk: obj_materias.gk_total_materiales,
+      total_materia_prima_margen_seguridad: obj_materias.margen_seguridad_Total,
+      total_materia_prima_margin_2: obj_materias.margin_2_materiales_Total,
+      total_materia_prima_parte_g: obj_materias.parte_g_Total,
       tipo_maquina: this.seletcedMaquina.machine_type,
       costo_hora_maquina: this.seletcedMaquina.costo_hora,
       cyclus: this.ciclo,
@@ -675,13 +604,30 @@ export class FormCotizadorComponent {
       kg_material: this.kg_material,
       moq: this.moq,
       eau: this.eau,
-      total: this.total
+      total: this.total,
     }
+
+    obj.tabla_total_produccion = this.obtener_totalProduction(obj);
+    obj.tabla_produccion_porc= obj.tabla_total_produccion/obj.unit_price;
+    obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
+    obj.tabla_empaque_logistica_porc= obj.tabla_total_empaque_logistica/obj.unit_price;
+    obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
+    obj.tabla_mantenimiento_porc=  obj.tabla_total_mantenimiento / obj.unit_price;
+
     this.array_items_cotizacion.push(obj);
     this.toast.success("Item de Cotización agregada con exito","Item agregado");
     this.obtener_totalCotizacfion();
     this.limpiarSecciones();
     console.log('item agregado',obj);
+  }
+
+  guardarCotizacion_Prueba(){
+    const obj_send:any = {
+      cotizacion_array: this.array_items_cotizacion
+    }
+    this.cotizadorService.postGuardarCotizacion(obj_send).subscribe((resp:any)=>{
+      console.log(resp);
+    });
   }
 
   guardarCotizacion(){
@@ -708,6 +654,16 @@ export class FormCotizadorComponent {
       this.toast.success('Se agrego corrrectamente la cotización','Cotización Agregada');
       this.route.navigate(['/cotizador']);
     });
+  }
+
+  editarItemCot(item:itemsCotizacion){
+    console.log(item);
+  }
+
+  eliminarItemCot(index:number){
+    this.array_items_cotizacion.splice(index, 1);
+    this.toast.remove();
+    this.toast.info("Item de la Cotización eliminada del listado","Eliminado con exito");
   }
 
 

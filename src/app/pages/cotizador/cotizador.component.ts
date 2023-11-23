@@ -58,7 +58,14 @@ export class CotizadorComponent {
     })
   }
 
+  consultarCotizacion(cotizacion_code:string){
+    this.cotizacion.getDeatalleCotizacion(cotizacion_code).subscribe((resp:any)=>{
+      console.log(resp);
+    })
+    //this.route.navigate([`form-cotizador/${2}`]);
+  }
+
   generarCotizacion(){
-    this.route.navigate(['form-cotizador']);
+    this.route.navigate([`form-cotizador/${1}`]);
   }
 }

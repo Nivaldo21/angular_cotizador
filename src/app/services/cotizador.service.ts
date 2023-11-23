@@ -47,6 +47,10 @@ export class CotizadorService {
     return this.http.post(this.apiUrl+'/buscarMaquinas',data)
   }
 
+  getDeatalleCotizacion(code_cotizacion:string){
+    return this.http.get(this.apiUrl+'/getCotizacionByCode/'+code_cotizacion);
+  }
+
 
 
 }
