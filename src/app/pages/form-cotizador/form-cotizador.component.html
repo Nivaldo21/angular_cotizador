@@ -75,7 +75,8 @@
                     [addTag]="true"
                     addTagText="Añadir nuevo código"
                     (ngModelChange)="onParteSelected(1,$event)"
-                    [(ngModel)]="selectedParte_codigo">
+                    [(ngModel)]="selectedParte_codigo"
+                    maxlength="30">
                   </ng-select>
                 </div>
                 <div class="col-sm-12 col-md-8 col-lg-6 col-xl-4 mb-3">
@@ -117,6 +118,9 @@
                               bindLabel="codigo_material"
                               (ngModelChange)="onMaterialSelected(1,$event)">
                             </ng-select>
+                            <div  *ngIf="form_materiaPrima.get('codigo_materia_prima')?.invalid && (form_materiaPrima.get('codigo_materia_prima')?.dirty || form_materiaPrima.get('codigo_materia_prima')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('codigo_materia_prima')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            </div>
                           </div>
                           <div class="col-sm-12 col-md-8 col-lg-6 col-xl-4 mb-3">
                             <label for="descripcion_materia_prima" class="form-label">DESCRIPCIÓN MATERIA PRIMA</label>
@@ -126,76 +130,123 @@
                               bindLabel="nombre_material"
                               (ngModelChange)="onMaterialSelected(2,$event)">
                             </ng-select>
+                            <div  *ngIf="form_materiaPrima.get('descripcion_materia_prima')?.invalid && (form_materiaPrima.get('descripcion_materia_prima')?.dirty || form_materiaPrima.get('descripcion_materia_prima')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('descripcion_materia_prima')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="SUPPLIER_RESIN" class="form-label">SUPPLIER RESIN</label>
                             <input type="text" class="form-control" formControlName="SUPPLIER_RESIN" name="SUPPLIER_RESIN">
+                            <div  *ngIf="form_materiaPrima.get('SUPPLIER_RESIN')?.invalid && (form_materiaPrima.get('SUPPLIER_RESIN')?.dirty || form_materiaPrima.get('SUPPLIER_RESIN')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('SUPPLIER_RESIN')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('SUPPLIER_RESIN')?.errors?.['maxlength']" class="text-danger text">❌ Maximo 100 caracteres</small>
+                            </div>
                           </div>
                         </div>
                         <div class="row mt-3">
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="parte_g" class="form-label">PART (g)</label>
-                            <input type="text" class="form-control" formControlName="parte_g" (ngModelChange)="calculatedValue()" name="parte_g">
+                            <input type="number" class="form-control" formControlName="parte_g" (ngModelChange)="calculatedValue()" name="parte_g">
+                            <div  *ngIf="form_materiaPrima.get('parte_g')?.invalid && (form_materiaPrima.get('parte_g')?.dirty || form_materiaPrima.get('parte_g')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('parte_g')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('parte_g')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="RUNNER_percent" class="form-label">RUNNER %</label>
-                            <input type="text" class="form-control" formControlName="RUNNER_percent" (ngModelChange)="calculatedValue()" name="RUNNER_percent" >
+                            <input type="number" class="form-control" formControlName="RUNNER_percent" (ngModelChange)="calculatedValue()" name="RUNNER_percent" >
+                            <div  *ngIf="form_materiaPrima.get('RUNNER_percent')?.invalid && (form_materiaPrima.get('RUNNER_percent')?.dirty || form_materiaPrima.get('RUNNER_percent')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('RUNNER_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('RUNNER_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="RUNNER_g" class="form-label">RUNNER (g)</label>
-                            <input type="text" class="form-control disabled" formControlName="RUNNER_g" name="RUNNER_g" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="RUNNER_g" name="RUNNER_g" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('RUNNER_g')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal(11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="loss_percent" class="form-label">LOSS %</label>
-                            <input type="text" class="form-control" formControlName="loss_percent" name="loss_percent" (ngModelChange)="calculateWeigth()">
+                            <input type="number" class="form-control" formControlName="loss_percent" name="loss_percent" (ngModelChange)="calculateWeigth()">
+                            <div  *ngIf="form_materiaPrima.get('loss_percent')?.invalid && (form_materiaPrima.get('loss_percent')?.dirty || form_materiaPrima.get('loss_percent')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('loss_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('loss_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal(6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="weigth" class="form-label">WEIGTH / 100</label>
-                            <input type="text" class="form-control disabled" formControlName="weigth" name="weigth" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="weigth" name="weigth" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('weigth')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="resin_basis" class="form-label">RESIN - BASIS</label>
-                            <input type="text" class="form-control" formControlName="resin_basis" name="resin_basis" (ngModelChange)="calculateResinCot()">
+                            <input type="number" class="form-control" formControlName="resin_basis" name="resin_basis" (ngModelChange)="calculateResinCot()">
+                            <div  *ngIf="form_materiaPrima.get('resin_basis')?.invalid && (form_materiaPrima.get('resin_basis')?.dirty || form_materiaPrima.get('resin_basis')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('resin_basis')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('resin_basis')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="overhead_cost" class="form-label">% OVERHEAD COST</label>
-                            <input type="text" class="form-control" formControlName="overhead_cost" name="overhead_cost" (ngModelChange)="calculateResinCot()">
+                            <input type="number" class="form-control" formControlName="overhead_cost" name="overhead_cost" (ngModelChange)="calculateResinCot()">
+                            <div  *ngIf="form_materiaPrima.get('overhead_cost')?.invalid && (form_materiaPrima.get('overhead_cost')?.dirty || form_materiaPrima.get('overhead_cost')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('overhead_cost')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('overhead_cost')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="resin_cot" class="form-label">RESIN COT</label>
-                            <input type="text" class="form-control disabled" formControlName="resin_cot" name="resin_cot" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="resin_cot" name="resin_cot" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('resin_cot')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="total_mat" class="form-label">TOTAL MAT</label>
-                            <input type="text" class="form-control disabled" formControlName="total_mat" name="total_mat" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="total_mat" name="total_mat" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('total_mat')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="GK_percent" class="form-label">GK %</label>
-                            <input type="text" class="form-control" formControlName="GK_percent" name="GK_percent" (ngModelChange)="calculateGK()">
+                            <input type="number" class="form-control" formControlName="GK_percent" name="GK_percent" (ngModelChange)="calculateGK()">
+                            <div  *ngIf="form_materiaPrima.get('GK_percent')?.invalid && (form_materiaPrima.get('GK_percent')?.dirty || form_materiaPrima.get('GK_percent')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('GK_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('GK_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="GK" class="form-label">GK</label>
-                            <input type="text" class="form-control disabled" formControlName="GK" name="GK" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="GK" name="GK" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('GK')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="scrap_percent" class="form-label">SCRAP %</label>
-                            <input type="text" class="form-control" formControlName="scrap_percent" name="scrap_percent" (ngModelChange)="calculateMarginScrap()">
+                            <input type="number" class="form-control" formControlName="scrap_percent" name="scrap_percent" (ngModelChange)="calculateMarginScrap()">
+                            <div  *ngIf="form_materiaPrima.get('scrap_percent')?.invalid && (form_materiaPrima.get('scrap_percent')?.dirty || form_materiaPrima.get('scrap_percent')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('scrap_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('scrap_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="margin_scrap" class="form-label">MARGIN SCRAP</label>
-                            <input type="text" class="form-control disabled" formControlName="margin_scrap" name="margin_scrap" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="margin_scrap" name="margin_scrap" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('margin_scrap')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="margin_2" class="form-label">MARGIN 2</label>
-                            <input type="text" class="form-control disabled" formControlName="margin_2" name="margin_2" [readOnly]="true">
+                            <input type="number" class="form-control disabled" formControlName="margin_2" name="margin_2" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('margin_2')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="margen_seguridad_percent" class="form-label">% MARGEN SEGURIDAD</label>
-                            <input type="text" class="form-control" formControlName="margen_seguridad_percent" name="margen_seguridad_percent" (ngModelChange)="calculateMarginSecurity()">
+                            <input type="number" class="form-control" formControlName="margen_seguridad_percent" name="margen_seguridad_percent" (ngModelChange)="calculateMarginSecurity()">
+                            <div  *ngIf="form_materiaPrima.get('margen_seguridad_percent')?.invalid && (form_materiaPrima.get('margen_seguridad_percent')?.dirty || form_materiaPrima.get('margen_seguridad_percent')?.touched)">
+                              <small *ngIf="form_materiaPrima.get('margen_seguridad_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                              <small *ngIf="form_materiaPrima.get('margen_seguridad_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                            </div>
                           </div>
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="margen_seguridad" class="form-label">MARGEN SEGURIDAD</label>
-                            <input type="text" class="form-control disabled"  formControlName="margen_seguridad" name="margen_seguridad" [readOnly]="true">
+                            <input type="number" class="form-control disabled"  formControlName="margen_seguridad" name="margen_seguridad" [readOnly]="true">
+                            <small *ngIf="form_materiaPrima.get('margen_seguridad')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                           </div>
                           <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-3">
                             <button type="submit" class="btn btn-teal-line mt13">{{flag_edit_materiaP ? 'Editar materia prima' : 'Agregar otra materia prima'}}</button>
@@ -274,39 +325,59 @@
                   </h2>
                   <div id="panelMaquina" class="accordion-collapse collapse" aria-labelledby="panelHead-Maquina">
                     <div class="accordion-body">
-                      <div class="row">
+                      <form class="row" [formGroup]="form_maquina" >
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">TYPE</label>
-                          <select class="form-select" [(ngModel)]="seletcedMaquina" (ngModelChange)="setCostoMaquina()">
+                          <select class="form-select" formControlName="seletcedMaquina" (ngModelChange)="setCostoMaquina()">
                             <option value="">- Seleccionar -</option>
                             <option *ngFor="let item of opcionesMaquinas" [ngValue]="item">{{item.machine_type}}</option>
                           </select>
+                          <div  *ngIf="form_maquina.get('seletcedMaquina')?.invalid && (form_maquina.get('seletcedMaquina')?.dirty || form_maquina.get('seletcedMaquina')?.touched)">
+                            <small *ngIf="form_maquina.get('seletcedMaquina')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">COSTO / H</label>
-                          <input type="text" class="form-control"  [(ngModel)]="precioMaquina"  (ngModelChange)="caclulate_production()">
+                          <input type="number" class="form-control" formControlName="precioMaquina" (ngModelChange)="caclulate_production()">
+                          <div  *ngIf="form_maquina.get('precioMaquina')?.invalid && (form_maquina.get('precioMaquina')?.dirty || form_maquina.get('precioMaquina')?.touched)">
+                            <small *ngIf="form_maquina.get('precioMaquina')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_maquina.get('precioMaquina')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">CYCLUS</label>
-                          <input type="text" class="form-control"  [(ngModel)]="ciclo"  (ngModelChange)="caclulate_production()">
+                          <input type="number" class="form-control"  formControlName="ciclo" (ngModelChange)="caclulate_production()">
+                          <div  *ngIf="form_maquina.get('ciclo')?.invalid && (form_maquina.get('ciclo')?.dirty || form_maquina.get('ciclo')?.touched)">
+                            <small *ngIf="form_maquina.get('ciclo')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PCS / HR</label>
-                          <input type="text" class="form-control"  [(ngModel)]="pcs_hr">
+                          <input type="text" class="form-control"  formControlName="pcs_hr" (ngModelChange)="calculate_moq()">
+                          <div  *ngIf="form_maquina.get('pcs_hr')?.invalid && (form_maquina.get('pcs_hr')?.dirty || form_maquina.get('pcs_hr')?.touched)">
+                            <small *ngIf="form_maquina.get('pcs_hr')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_maquina.get('pcs_hr')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">% INEFICIENCIA</label>
-                          <input type="text" class="form-control"  [(ngModel)]="ineficiencia_percent"  (ngModelChange)="calculateMargin_4()">
+                          <input type="text" class="form-control" formControlName="ineficiencia_percent" (ngModelChange)="calculateMargin_4()">
+                          <div  *ngIf="form_maquina.get('ineficiencia_percent')?.invalid && (form_maquina.get('ineficiencia_percent')?.dirty || form_maquina.get('ineficiencia_percent')?.touched)">
+                            <small *ngIf="form_maquina.get('ineficiencia_percent')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_maquina.get('ineficiencia_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PRODUCTION</label>
-                          <input type="text" class="form-control" [(ngModel)]="production" disabled>
+                          <input type="number" class="form-control disabled" formControlName="production" [readonly]="true">
+                          <small *ngIf="form_maquina.get('production')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">MARGIN 4</label>
-                          <input type="text" class="form-control" [(ngModel)]="margin_4" disabled >
+                          <input type="number" class="form-control disabled"  formControlName="margin_4" [readonly]="true">
+                          <small *ngIf="form_maquina.get('margin_4')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -319,36 +390,58 @@
                   </h2>
                   <div id="panelEmpaque" class="accordion-collapse collapse" aria-labelledby="panelHead-empaque">
                     <div class="accordion-body">
-                      <div class="row">
+                      <form class="row" [formGroup]="form_empaqueEntrega">
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PACKING COST</label>
-                          <input type="text" class="form-control" [(ngModel)]="packing_cost" (ngModelChange)="calculate_PACKING()">
+                          <input type="number" class="form-control" formControlName="packing_cost" (ngModelChange)="calculate_PACKING()"> 
+                          <div  *ngIf="form_empaqueEntrega.get('packing_cost')?.invalid && (form_empaqueEntrega.get('packing_cost')?.dirty || form_empaqueEntrega.get('packing_cost')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('packing_cost')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_empaqueEntrega.get('packing_cost')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PCS / PACKING</label>
-                          <input type="text" class="form-control"  [(ngModel)]="parking_pcs"  (ngModelChange)="calculate_PACKING()">
+                          <input type="number" class="form-control"  formControlName="parking_pcs" (ngModelChange)="calculate_PACKING()">
+                          <div  *ngIf="form_empaqueEntrega.get('parking_pcs')?.invalid && (form_empaqueEntrega.get('parking_pcs')?.dirty || form_empaqueEntrega.get('parking_pcs')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('parking_pcs')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PACKING</label>
-                          <input type="text" class="form-control" disabled  [(ngModel)]="packing">
+                          <input type="number" class="form-control disabled" formControlName="packing" [readonly]="true">
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PCS ENTREGA</label>
-                          <input type="text" class="form-control"  [(ngModel)]="pcs_entrega" (ngModelChange)="caclulate_logisticCost()">
+                          <input type="number" class="form-control" formControlName="pcs_entrega" (ngModelChange)="caclulate_logisticCost()">
+                          <div  *ngIf="form_empaqueEntrega.get('pcs_entrega')?.invalid && (form_empaqueEntrega.get('pcs_entrega')?.dirty || form_empaqueEntrega.get('pcs_entrega')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('pcs_entrega')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">COSTO FLETE</label>
-                          <input type="text" class="form-control"  [(ngModel)]="costo_flete" (ngModelChange)="caclulate_logisticCost()">
+                          <input type="number" class="form-control" formControlName="costo_flete" (ngModelChange)="caclulate_logisticCost()">
+                          <div  *ngIf="form_empaqueEntrega.get('costo_flete')?.invalid && (form_empaqueEntrega.get('costo_flete')?.dirty || form_empaqueEntrega.get('costo_flete')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('costo_flete')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_empaqueEntrega.get('costo_flete')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">COSTO LOGÍSTICO</label>
-                          <input type="text" class="form-control" [(ngModel)]="costo_logistico"  disabled>
+                          <input type="number" class="form-control disabled" formControlName="costo_logistico"  [readonly]="true">
+                          <div  *ngIf="form_empaqueEntrega.get('costo_logistico')?.invalid && (form_empaqueEntrega.get('costo_logistico')?.dirty || form_empaqueEntrega.get('costo_logistico')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('costo_logistico')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_empaqueEntrega.get('costo_logistico')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">PACKING AND OUTSIDE SERVICE</label>
-                          <input type="text" class="form-control" [(ngModel)]="packing_outside_service" disabled>
+                          <input type="number" class="form-control disabled" formControlName="packing_outside_service" [readonly]="true">
+                          <div  *ngIf="form_empaqueEntrega.get('packing_outside_service')?.invalid && (form_empaqueEntrega.get('packing_outside_service')?.dirty || form_empaqueEntrega.get('packing_outside_service')?.touched)">
+                            <small *ngIf="form_empaqueEntrega.get('packing_outside_service')?.errors?.['required']" class="text-danger text">❌ Campo Requerido</small>
+                            <small *ngIf="form_empaqueEntrega.get('packing_outside_service')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -361,24 +454,38 @@
                   </h2>
                   <div id="panelMantenimiento" class="accordion-collapse collapse" aria-labelledby="panelHead-Mantenimiento">
                     <div class="accordion-body">
-                      <div class="row">
+                      <form class="row" [formGroup]="form_mantenimientoHerramental">
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">HR MTTO</label>
-                          <input type="text" class="form-control" [(ngModel)]="hr_mantto" (ngModelChange)="calculate_tooling_mantiance()">
+                          <input type="number" class="form-control" formControlName="hr_mantto" (ngModelChange)="calculate_tooling_mantiance()">
+                          <div  *ngIf="form_mantenimientoHerramental.get('hr_mantto')?.invalid && (form_mantenimientoHerramental.get('hr_mantto')?.dirty || form_mantenimientoHerramental.get('hr_mantto')?.touched)">
+                            <small *ngIf="form_mantenimientoHerramental.get('hr_mantto')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_mantenimientoHerramental.get('hr_mantto')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">COST / HR</label>
-                          <input type="text" class="form-control" [(ngModel)]="precioMaquina" (ngModelChange)="caclulate_production()">
+                          <input type="number" class="form-control" formControlName="precioMaquina" (ngModelChange)="caclulate_production()">
+                          <div  *ngIf="form_mantenimientoHerramental.get('precioMaquina')?.invalid && (form_mantenimientoHerramental.get('precioMaquina')?.dirty || form_mantenimientoHerramental.get('precioMaquina')?.touched)">
+                            <small *ngIf="form_mantenimientoHerramental.get('precioMaquina')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">PCS / MANTTO</label>
-                          <input type="text" class="form-control" [(ngModel)]="pcs_mtto" (ngModelChange)="calculate_tooling_mantiance()">
+                          <input type="number" class="form-control" formControlName="pcs_mtto" (ngModelChange)="calculate_tooling_mantiance()">
+                          <div  *ngIf="form_mantenimientoHerramental.get('pcs_mtto')?.invalid && (form_mantenimientoHerramental.get('pcs_mtto')?.dirty || form_mantenimientoHerramental.get('pcs_mtto')?.touched)">
+                            <small *ngIf="form_mantenimientoHerramental.get('pcs_mtto')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">TOOLING MANTIANCE</label>
-                          <input type="text" class="form-control" [(ngModel)]="tooling_maintance" disabled>
+                          <input type="number" class="form-control disabled" formControlName="tooling_maintance" [readOnly]="true">
+                          <div  *ngIf="form_mantenimientoHerramental.get('tooling_maintance')?.invalid && (form_mantenimientoHerramental.get('tooling_maintance')?.dirty || form_mantenimientoHerramental.get('tooling_maintance')?.touched)">
+                            <small *ngIf="form_mantenimientoHerramental.get('tooling_maintance')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_mantenimientoHerramental.get('tooling_maintance')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -391,41 +498,73 @@
                   </h2>
                   <div id="paneltotalesPiezas" class="accordion-collapse collapse" aria-labelledby="panelHead-totalesPiezas">
                     <div class="accordion-body">
-                      <div class="row">
+                      <form class="row" [formGroup]="form_totalesPiezas">
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">% OVERHEAD</label>
-                          <input type="text" class="form-control" [(ngModel)]="ovh_ind_porc" (ngModelChange)="calculate_overhead()">
+                          <input type="number" class="form-control" formControlName="ovh_ind_porc" (ngModelChange)="calculate_overhead()">
+                          <div  *ngIf="form_totalesPiezas.get('ovh_ind_porc')?.invalid && (form_totalesPiezas.get('ovh_ind_porc')?.dirty || form_totalesPiezas.get('ovh_ind_porc')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('ovh_ind_porc')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('ovh_ind_porc')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">OVERHEAD</label>
-                          <input type="text" class="form-control" [(ngModel)]="overhead" disabled>
+                          <input type="number" class="form-control disabled" formControlName="overhead" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('overhead')?.invalid && (form_totalesPiezas.get('overhead')?.dirty || form_totalesPiezas.get('overhead')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('overhead')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('overhead')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">MARGIN OVERHEAD</label>
-                          <input type="text" class="form-control" [(ngModel)]="margin_overhead" disabled>
+                          <input type="number" class="form-control disabled" formControlName="margin_overhead" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('margin_overhead')?.invalid && (form_totalesPiezas.get('margin_overhead')?.dirty || form_totalesPiezas.get('margin_overhead')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('margin_overhead')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('margin_overhead')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">% PROFITT</label>
-                          <input type="text" class="form-control" [(ngModel)]="profitt_percent">
+                          <input type="number" class="form-control" formControlName="profitt_percent">
+                          <div  *ngIf="form_totalesPiezas.get('profitt_percent')?.invalid && (form_totalesPiezas.get('profitt_percent')?.dirty || form_totalesPiezas.get('profitt_percent')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('profitt_percent')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('profitt_percent')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (6,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">PROFITT</label>
-                          <input type="text" class="form-control" [(ngModel)]="profitt" disabled>
+                          <input type="number" class="form-control disabled" formControlName="profitt" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('profitt')?.invalid && (form_totalesPiezas.get('profitt')?.dirty || form_totalesPiezas.get('profitt')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('profitt')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('profitt')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">MARGIN PROFIT</label>
-                          <input type="text" class="form-control" [(ngModel)]="margin_profitt" disabled>
+                          <input type="number" class="form-control disabled" formControlName="margin_profitt" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('margin_profitt')?.invalid && (form_totalesPiezas.get('margin_profitt')?.dirty || form_totalesPiezas.get('margin_profitt')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('margin_profitt')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('margin_profitt')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
     
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">UNIT PRICE</label>
-                          <input type="text" class="form-control" [(ngModel)]="unit_price" disabled>
+                          <input type="number" class="form-control disabled" formControlName="unit_price" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('unit_price')?.invalid && (form_totalesPiezas.get('unit_price')?.dirty || form_totalesPiezas.get('unit_price')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('unit_price')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('unit_price')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">MARGIN TOTAL</label>
-                          <input type="text" class="form-control" [(ngModel)]="margin_total" disabled>
+                          <input type="number" class="form-control disabled" formControlName="margin_total" [readOnly]="true">
+                          <div  *ngIf="form_totalesPiezas.get('margin_total')?.invalid && (form_totalesPiezas.get('margin_total')?.dirty || form_totalesPiezas.get('margin_total')?.touched)">
+                            <small *ngIf="form_totalesPiezas.get('margin_total')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totalesPiezas.get('margin_total')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -438,24 +577,38 @@
                   </h2>
                   <div id="panelTotales" class="accordion-collapse collapse" aria-labelledby="panelHead-Totales">
                     <div class="accordion-body">
-                      <div class="row">
+                      <form class="row" [formGroup]="form_totales">
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">Kg MATERIAL</label>
-                          <input type="text" class="form-control" [(ngModel)]="kg_material" disabled>
+                          <input type="number" class="form-control disabled" formControlName="kg_material" [readOnly]="true">
+                          <div  *ngIf="form_totales.get('kg_material')?.invalid && (form_totales.get('kg_material')?.dirty || form_totales.get('kg_material')?.touched)">
+                            <small *ngIf="form_totales.get('kg_material')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totales.get('kg_material')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label">MOQ</label>
-                          <input type="text" class="form-control" [(ngModel)]="moq" disabled>
+                          <input type="number" class="form-control disabled" formControlName="moq" [readOnly]="true">
+                          <div  *ngIf="form_totales.get('moq')?.invalid && (form_totales.get('moq')?.dirty || form_totales.get('moq')?.touched)">
+                            <small *ngIf="form_totales.get('moq')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">EAU</label>
-                          <input type="text" class="form-control" [(ngModel)]="eau" (ngModelChange)="calculate_pcs_mtto()">
+                          <input type="number" class="form-control" formControlName="eau" (ngModelChange)="calculate_pcs_mtto()">
+                          <div  *ngIf="form_totales.get('eau')?.invalid && (form_totales.get('eau')?.dirty || form_totales.get('eau')?.touched)">
+                            <small *ngIf="form_totales.get('eau')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                           <label for="" class="form-label txtLabel-lg">Total</label>
-                          <input type="text" class="form-control" [(ngModel)]="total" disabled>
+                          <input type="number" class="form-control disabled" formControlName="total" [readOnly]="true">
+                          <div  *ngIf="form_totales.get('total')?.invalid && (form_totales.get('total')?.dirty || form_totales.get('total')?.touched)">
+                            <small *ngIf="form_totales.get('total')?.errors?.['required']" class="text-danger text">❌ Campo Numerico Requerido</small>
+                            <small *ngIf="form_totales.get('total')?.errors?.['pattern']" class="text-danger text">❌ El campo debe tener un formato decimal (11,4)</small>
+                          </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -497,13 +650,13 @@
                     <td>{{ item.descripcion_parte }}</td>
                     <td class="tdIzq">${{item.unit_price}}</td>
                     <td class="tdIzq">${{item.total_materia_prima}}</td>
-                    <td class="tdIzq">{{item.total_materia_prima/item.unit_price}}%</td>
+                    <td class="tdIzq">{{ (item.total_materia_prima / item.unit_price).toFixed(4) }}%</td>
                     <td class="tdIzq">${{obtener_totalProduction(item)}}</td>
-                    <td class="tdIzq">{{obtener_totalProduction(item)/item.unit_price}}%</td>
+                    <td class="tdIzq">{{(obtener_totalProduction(item) / item.unit_price).toFixed(4)}}%</td>
                     <td class="tdIzq">${{obtener_totalEmpaqueLogistica(item)}}</td>
-                    <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item)/item.unit_price}}%</td>
+                    <td class="tdIzq">{{(obtener_totalEmpaqueLogistica(item) / item.unit_price).toFixed(4)}}%</td>
                     <td class="tdIzq">${{obtener_mantenimiento(item)}}</td>
-                    <td class="tdIzq">%{{obtener_mantenimiento(item)/item.unit_price}}</td>
+                    <td class="tdIzq">%{{(obtener_mantenimiento(item) / item.unit_price).toFixed(4)}}</td>
                     <td class="tdIzq">{{item.kg_material}}</td>
                     <td class="tdIzq">{{item.eau}}</td>
                     <td class="tdIzq">${{item.total}}</td>
