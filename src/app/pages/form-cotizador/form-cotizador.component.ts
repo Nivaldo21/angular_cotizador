@@ -99,10 +99,10 @@ export class FormCotizadorComponent {
     });
 
     this.form_mantenimientoHerramental = this.fb.group({
-      hr_mantto: ['',[Validators.required,Validators.pattern(/^\d{1,7}(\.\d{1,4})?$/)]],
-      precioMaquina: ['',[Validators.required]],
-      pcs_mtto: ['',[Validators.required]],
-      tooling_maintance: ['',[Validators.required,Validators.pattern(/^\d{1,7}(\.\d{1,4})?$/)]],
+      hr_mantto: [null,[Validators.required,Validators.pattern(/^\d{1,7}(\.\d{1,4})?$/)]],
+      precioMaquina: [null,[Validators.required]],
+      pcs_mtto: [null,[Validators.required]],
+      tooling_maintance: [null,[Validators.required,Validators.pattern(/^\d{1,7}(\.\d{1,4})?$/)]],
     });
 
     this.form_totalesPiezas = this.fb.group({
@@ -316,8 +316,12 @@ export class FormCotizadorComponent {
   }
 
   setCostoMaquina(){
-    this.form_maquina.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora);
-    this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora);
+    console.log("this.form_maquina.value.seletcedMaquina ",this.form_maquina.value.seletcedMaquina)
+    if (this.form_maquina.value.seletcedMaquina) {
+      console.log("ENTRE ");
+      this.form_maquina.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora ? this.form_maquina.value.seletcedMaquina.costo_hora : null);
+      this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora ? this.form_maquina.value.seletcedMaquina.costo_hora : null);
+    }
   }
 
   caclulate_production(){
@@ -362,8 +366,13 @@ export class FormCotizadorComponent {
   }
 
   calculate_pcs_mtto(){
-    const result = this.form_totales.value.eau/12;
-    this.form_mantenimientoHerramental.get('pcs_mtto')?.patchValue(result ? result.toFixed(4) : '');
+    if (!this.form_totales.value.eau) {
+      console.log("no se calcula nada en EAU");
+      return
+    }
+    console.log("si se calcula");
+    const result:number = Number(this.form_totales.value.eau)/12;
+    this.form_mantenimientoHerramental.get('pcs_mtto')?.patchValue(result ? result.toFixed(4) : null);
     this.calculate_tooling_mantiance();
     this.calculate_kg_material();
     this.calculate_total();
@@ -647,32 +656,7 @@ export class FormCotizadorComponent {
   //ITEM COTIZACION, DE PRODUCTO
   flag_nueva_parte: boolean = false;
   addItemCotizacion(){
-    if (!this.cliente_selected || !this.proceso_selected || !this.precio_selected || !this.selectedVendedor || !this.selectedParte_codigo || !this.selectedParte_descripcion || !this.cav) {
-      this.toast.warning("Hay errores y/o campos faltantes","Datos generales cotizacion");
-      return;
-    }
-    if (this.array_materiaPrimas.length <= 0) {
-      this.toast.warning("Se necesita minimo una materia prima","Sin materias primas");
-      return;
-    }
-    if (this.form_maquina.invalid) {
-      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Maquina");
-      return;
-    }
-    if (this.form_empaqueEntrega.invalid) {
-      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Empaque Entrega");
-      return;
-    }
-    if (this.form_mantenimientoHerramental.invalid) {
-      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Mantenimiento herramental");
-      return;
-    }
-    if (this.form_totalesPiezas.invalid) {
-      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales pieza");
-      return;
-    }
-    if (this.form_totales.invalid) {
-      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales");
+    if (this.verificarFormCot()) {
       return;
     }
     const obj_materias:any =  this.calculate_totals_materials();
@@ -761,20 +745,163 @@ export class FormCotizadorComponent {
       impuestos: this.impuetsos_cotizacion,
       gran_total: this.gran_total_cotizacion
     }
-    this.cotizadorService.postGuardarCotizacion(obj_send).subscribe((resp:any)=>{
-      this.toast.remove();
-      if (resp.status == 500) {
-        this.toast.error('Verifique todos los campos de la cotización e intentelo denuevo','Error en Agregar Cotización');
-        return;
+    this.cotizadorService.postGuardarCotizacion(obj_send).subscribe({
+      next: (resp: any) => {
+        this.toast.remove();
+        console.log(resp);
+        this.toast.success('Se agregó correctamente la cotización','Cotización Agregada');
+        this.route.navigate(['/cotizador']);
+      },
+      error: (error: any) => {
+        this.toast.remove();
+        console.error(error);
+        if (error.status === 500) {
+          this.toast.error('Verifique todos los campos de la cotización e inténtelo de nuevo','Error en Agregar Cotización 500');
+        } else if (error.status === 400) {
+          this.toast.error(error.error.message,'Error 400');
+        } else {
+          this.toast.error('Hubo un error en el guardado de la cotizacion','Error Desconocido');
+          // Otros errores
+        }
       }
-      console.log(resp);
-      this.toast.success('Se agrego corrrectamente la cotización','Cotización Agregada');
-      this.route.navigate(['/cotizador']);
     });
   }
 
-  editarItemCot(item:itemsCotizacion){
-    console.log(item);
+  confirmarEdicionItem(){
+    if (this.verificarFormCot()) {
+      return;
+    }
+    const obj_materias:any =  this.calculate_totals_materials();
+    let obj:itemsCotizacion = {
+      codigo_parte: (typeof  this.selectedParte_codigo === 'object') ? this.selectedParte_codigo.codigo_parte  : this.selectedParte_codigo,
+      descripcion_parte: (typeof  this.selectedParte_descripcion === 'object') ? this.selectedParte_descripcion.nombre_parte  : this.selectedParte_descripcion,
+      flag_nueva_parte: this.flag_nueva_parte,
+      cav: this.cav,
+      materias_primas: this.array_materiaPrimas,
+      total_materia_prima: obj_materias.totalMateriales,
+      total_materia_prima_gk: obj_materias.gk_total_materiales,
+      total_materia_prima_margen_seguridad: obj_materias.margen_seguridad_Total,
+      total_materia_prima_margin_2: obj_materias.margin_2_materiales_Total,
+      total_materia_prima_parte_g: obj_materias.parte_g_Total,
+      tipo_maquina: this.form_maquina.value.seletcedMaquina.machine_type,
+      costo_hora_maquina: this.form_maquina.value.seletcedMaquina.costo_hora,
+      cyclus: this.form_maquina.value.ciclo,
+      pcs_hr: this.form_maquina.value.pcs_hr,
+      ineficiencia_porcentaje: this.form_maquina.value.ineficiencia_percent,
+      production:  this.form_maquina.value.production ,
+      margin_4: this.form_maquina.value.margin_4,
+      packing_cost: this.form_empaqueEntrega.value.packing_cost,
+      pcs_packing: this.form_empaqueEntrega.value.parking_pcs,
+      packing: this.form_empaqueEntrega.value.packing,
+      pcs_entrega: this.form_empaqueEntrega.value.pcs_entrega,
+      costo_flete: this.form_empaqueEntrega.value.costo_flete,
+      costo_logistico: this.form_empaqueEntrega.value.costo_logistico,
+      packing_and_outside_service: this.form_empaqueEntrega.value.packing_outside_service,
+      hr_mtto: this.form_mantenimientoHerramental.value.hr_mantto,
+      cost_hr: this.form_maquina.value.precioMaquina,
+      pcs_mantto: this.form_mantenimientoHerramental.value.pcs_mtto,
+      tooling_mantiance: this.form_mantenimientoHerramental.value.tooling_maintance,
+      percent_overhead: this.form_totalesPiezas.value.ovh_ind_porc,
+      overhead: this.form_totalesPiezas.value.overhead,
+      margin_overhead: this.form_totalesPiezas.value.margin_overhead,
+      percent_proffit: this.form_totalesPiezas.value.profitt_percent,
+      proffit: this.form_totalesPiezas.value.profitt,
+      margin_profit: this.form_totalesPiezas.value.margin_profitt,
+      unit_price: this.form_totalesPiezas.value.unit_price,
+      margin_total: this.form_totalesPiezas.value.margin_total,
+      kg_material: this.form_totales.value.kg_material,
+      moq: this.form_totales.value.moq,
+      eau: this.form_totales.value.eau,
+      total: this.form_totales.value.total,
+    }
+
+    obj.tabla_total_produccion = this.obtener_totalProduction(obj);
+    const aux = obj.tabla_total_produccion/Number(obj.unit_price)
+    obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
+
+    obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
+    const aux2 = obj.tabla_total_empaque_logistica/Number(obj.unit_price);
+    obj.tabla_empaque_logistica_porc= parseFloat(aux2.toFixed(4));
+
+    obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
+    const aux3 =  obj.tabla_total_mantenimiento / Number(obj.unit_price)
+    obj.tabla_mantenimiento_porc=  parseFloat(aux3.toFixed(4));
+
+    this.array_items_cotizacion[this.flagIndexEdit_itemCot]=obj;
+    this.flagEdit_itemCot = false;
+    this.limpiarSecciones();
+    this.toast.success("La edicion del item se realizo correctamente","Item actualizado");
+  }
+
+  cancelarEdicionItem(){
+    this.toast.info("No se realizo ningun cambio en el Item","Cancelacion de Edicion");
+    this.flagEdit_itemCot = false;
+    this.flagIndexEdit_itemCot = -1;
+    this.limpiarSecciones();
+  }
+
+  flagEdit_itemCot:boolean = false;
+  flagIndexEdit_itemCot:number = -1;
+  editarItemCot(index:number,item:itemsCotizacion){
+    this.flagEdit_itemCot = true;
+    this.flagIndexEdit_itemCot = index;
+
+    if (item.materias_primas !== undefined) {
+      this.array_materiaPrimas = item.materias_primas;
+    }
+
+    this.selectedParte_codigo = item.codigo_parte;
+    this.selectedParte_descripcion = item.descripcion_parte;
+    this.cav = item.cav;
+
+    const seletcedMaquina = this.opcionesMaquinas.find(element => element.machine_type == item.tipo_maquina);
+
+    this.form_maquina.patchValue({
+      seletcedMaquina: seletcedMaquina,
+      precioMaquina: item.cost_hr,
+      ciclo: item.cyclus,
+      pcs_hr: item.pcs_hr,
+      production: item.production,
+      ineficiencia_percent: item.ineficiencia_porcentaje,
+      margin_4: item.margin_4,
+    }); 
+
+    this.form_empaqueEntrega.patchValue({
+      packing_cost: item.packing_cost,
+      parking_pcs: item.pcs_entrega,
+      packing: item.packing,
+      pcs_entrega: item.pcs_entrega,
+      costo_flete: item.costo_flete,
+      costo_logistico: item.costo_logistico,
+      packing_outside_service: item.packing_and_outside_service,
+    });
+
+    console.log("pcs_mantto -->",item.pcs_mantto);
+    this.form_mantenimientoHerramental.patchValue({
+      hr_mantto: item.hr_mtto,
+      precioMaquina: item.costo_hora_maquina,
+      pcs_mtto: item.pcs_mantto,
+      tooling_maintance: item.tooling_mantiance,
+    });
+
+    this.form_totalesPiezas.patchValue({
+      ovh_ind_porc: item.percent_overhead,
+      overhead: item.overhead,
+      margin_overhead: item.margin_overhead,
+      profitt_percent: item.percent_proffit,
+      profitt: item.proffit,
+      margin_profitt: item.margin_profit,
+      unit_price: item.unit_price,
+      margin_total: item.margin_total,
+    });
+    
+    this.form_totales.patchValue({
+      kg_material: item.kg_material,
+      moq: item.moq,
+      eau: item.eau,
+      total: item.total,
+    });
+    this.toast.info("Los datos estan listos para ser editados","Editar Item");
   }
 
   eliminarItemCot(index:number){
@@ -796,5 +923,52 @@ export class FormCotizadorComponent {
     this.form_empaqueEntrega.reset();
     this.form_totalesPiezas.reset();
     this.form_totales.reset();
+    this.form_mantenimientoHerramental.reset();
+  }
+
+  verificarFormCot():boolean{
+    if (!this.cliente_selected || !this.proceso_selected || !this.precio_selected || !this.selectedVendedor || !this.selectedParte_codigo || !this.selectedParte_descripcion || !this.cav) {
+      this.toast.warning("Hay errores y/o campos faltantes","Datos generales cotizacion");
+      return true;
+    }
+    if (this.array_materiaPrimas.length <= 0) {
+      this.toast.warning("Se necesita minimo una materia prima","Sin materias primas");
+      return true;
+    }
+    if (this.form_maquina.invalid) {
+      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Maquina");
+      return true;
+    }
+    if (this.form_empaqueEntrega.invalid) {
+      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Empaque Entrega");
+      return true;
+    }
+    if (this.form_mantenimientoHerramental.invalid) {
+      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Mantenimiento herramental");
+      return true;
+    }
+    if (this.form_totalesPiezas.invalid) {
+      Object.keys(this.form_totalesPiezas.controls).forEach(field => {
+        const control = this.form_totalesPiezas.get(field);
+        if (control && control.invalid) {
+          const errors = control.errors;
+          console.log(`Errores en el campo ${field}:`, errors);
+        }
+      });
+      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales pieza");
+      return true;
+    }
+    if (this.form_totales.invalid) {
+      Object.keys(this.form_totales.controls).forEach(field => {
+        const control = this.form_totales.get(field);
+        if (control && control.invalid) {
+          const errors = control.errors;
+          console.log(`Errores en el campo ${field}:`, errors);
+        }
+      });
+      this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales");
+      return true;
+    }
+    return false;
   }
 }
