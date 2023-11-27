@@ -76,7 +76,7 @@
                 <td>{{item.vendedor.nombre_vendedor}}</td>
                 <td class="text-center">
                     <button type="button" title="Consultar cotización" (click)="consultarCotizacion(item.folio_cotizacion)" class="btn-icon-action"><img src="assets/img/ic-observaciones.png" disabled></button>
-                    <button type="button" title="Estado de resultados" class="btn-icon-action"><img src="assets/img/ic-estado-resultados.png" disabled></button>
+                    <button type="button" title="Estado de resultados" (click)="consultarEstadoResultados(item.folio_cotizacion)" class="btn-icon-action"><img src="assets/img/ic-estado-resultados.png" disabled></button>
                 </td>
             </tr>
         </tbody>

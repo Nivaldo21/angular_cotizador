@@ -6,6 +6,7 @@ import request_Maquinas, { Maquinas_response } from 'src/app/interfaces/Maquinas
 import MateriaPrima from 'src/app/interfaces/MateriaPrima.interface';
 import Request_ParamIndustria from 'src/app/interfaces/Params_Industria.interace';
 import { Request_cotizacion_save } from 'src/app/interfaces/Request_Cotizaciones.interface';
+import { CotizacionData } from 'src/app/interfaces/consultarCotizacion.interface';
 import { CotizadorService } from 'src/app/services/cotizador.service';
 import { ToastService } from 'src/app/services/toast.service';
 
@@ -16,7 +17,8 @@ import { ToastService } from 'src/app/services/toast.service';
 })
 export class FormCotizadorComponent {
 
-  @Input() action?:string;
+  @Input() action?:boolean;
+  @Input() cot?:string;
   
   clienteOptions:any[] = [];
   selectedCliente:any = null;
@@ -54,6 +56,8 @@ export class FormCotizadorComponent {
   total_cotizacion: number = 0;
   impuetsos_cotizacion:number = 0;
   gran_total_cotizacion: number= 0;
+
+  dataConsult_items:CotizacionData[] =[];
 
   constructor(private cotizadorService:CotizadorService, private fb: FormBuilder, private toast:ToastService, private route:Router){
     this.form_materiaPrima = this.fb.group({
@@ -126,6 +130,197 @@ export class FormCotizadorComponent {
 
   ngOnInit(): void {
     this.initCombos();
+    if (this.action) {
+      this.form_maquina.disable();
+      this.form_empaqueEntrega.disable();
+      this.form_mantenimientoHerramental.disable();
+      this.form_totalesPiezas.disable();
+      this.form_totales.disable();
+      this.cotizadorService.getDeatalleCotizacion(this.cot ? this.cot : '').subscribe((resp:any)=>{
+        this.setData(resp);
+      });
+    }
+  }
+
+  checkItem(item:any){
+    console.log(item);
+    this.selectedParte_codigo = item.codigo_parte;
+    this.selectedParte_descripcion = item.descripcion_parte;
+    this.cav = item.cav;
+
+    item.materias_primas.forEach((element:any) =>{
+      const obj = this.materialesOptions.find(item => item.codigo_material == element.codigo_material)
+      this.array_materiaPrimas.push({
+        codigo_materia_prima: element.codigo_material,
+        descripcion_materia_prima: obj.nombre_material,
+        SUPPLIER_RESIN: element.supplier_resin,
+        parte_g: element.part_g,
+        RUNNER_percent: element.runner_porc,
+        RUNNER_g: element.runner_g,
+        loss_percent: element.loss_porc,
+        weigth: element.weigth,
+        resin_basis: element.resin_basis,
+        overhead_cost: element.ovh_cost_porc,
+        resin_cot: element.resin_cot,
+        total_mat: element.total_mat,
+        GK_percent: element.gk_porc,
+        GK: element.gk,
+        scrap_percent: element.scrap_porc,
+        margin_scrap: element.margin_scrap,
+        margin_2: element.margin2,
+        margen_seguridad: element.margin_seguridad,
+        margen_seguridad_percent: element.porc_margin_seguridad
+      });
+    })
+
+    let obj:request_Maquinas = {
+      tipo_proceso:this.proceso_selected
+    }
+    this.cotizadorService.postMaquinas(obj).subscribe((resp:any)=>{
+      if(resp) this.opcionesMaquinas = resp;
+      const seletcedMaquina = this.opcionesMaquinas.find(element => element.machine_type == item.tipo_maquina);
+
+      this.form_maquina.patchValue({
+        seletcedMaquina: seletcedMaquina,
+        precioMaquina: item.cost_hr,
+        ciclo: item.cyclus,
+        pcs_hr: item.pcs_hr,
+        production: item.production,
+        ineficiencia_percent: item.ineficiencia_porcentaje,
+        margin_4: item.margin_4,
+      }); 
+      this.form_empaqueEntrega.patchValue({
+        packing_cost: item.packing_cost,
+        parking_pcs: item.pcs_entrega,
+        packing: item.packing,
+        pcs_entrega: item.pcs_entrega,
+        costo_flete: item.costo_flete,
+        costo_logistico: item.costo_logistico,
+        packing_outside_service: item.packing_and_outside_service,
+      });
+  
+      this.form_mantenimientoHerramental.patchValue({
+        hr_mantto: item.hr_mtto,
+        precioMaquina: item.costo_hora_maquina,
+        pcs_mtto: item.pcs_mantto,
+        tooling_maintance: item.tooling_mantiance,
+      });
+  
+      this.form_totalesPiezas.patchValue({
+        ovh_ind_porc: item.percent_overhead,
+        overhead: item.overhead,
+        margin_overhead: item.margin_overhead,
+        profitt_percent: item.percent_proffit,
+        profitt: item.proffit,
+        margin_profitt: item.margin_profit,
+        unit_price: item.unit_price,
+        margin_total: item.margin_total,
+      });
+      
+      this.form_totales.patchValue({
+        kg_material: item.kg_material,
+        moq: item.moq,
+        eau: item.eau,
+        total: item.total,
+      });
+    })
+
+    this.toast.info("La informacion del item de la cotizacion se plasmo correctamente","Informacion mostrada");
+  }
+
+  calculate_totals_materials_consultar(data:any){
+    const gk_Total = data.reduce((acumulador:any, objeto:any) => acumulador + Number(objeto.gk), 0);
+    const margen_seguridad_Total = data.reduce((acumulador:any, objeto:any) => acumulador + Number(objeto.margin_seguridad), 0);
+    const margin_2_materiales_Total = data.reduce((acumulador:any, objeto:any) => acumulador + Number(objeto.margin2), 0);
+    const parte_g_Total = data.reduce((acumulador:any, objeto:any) => acumulador + Number(objeto.part_g), 0);
+    const total_mat = data.reduce((acumulador:any, objeto:any) => acumulador + Number(objeto.total_mat), 0);
+    return {
+      gk_total_materiales: gk_Total,
+      totalMateriales: total_mat,
+      margen_seguridad_Total: margen_seguridad_Total,
+      margin_2_materiales_Total: margin_2_materiales_Total,
+      parte_g_Total: parte_g_Total
+    }
+  }
+
+  setData(data:CotizacionData){
+    let objCliente = this.clienteOptions.find(element => element.CLI_CLAVE == data.cotizacion.codigo_cliente_prospecto);
+    if (!objCliente) {
+      objCliente =  this.clienteOptions.find(element => element.codigo_prospecto == Number(data.cotizacion.codigo_cliente_prospecto));
+    }
+    let objVendedor = this.vendedoresOptions.find(element => element.codigo_vendedor == data.cotizacion.codigo_vendedor);
+
+    this.selectedCliente = objCliente;
+    this.cliente_selected = data.cotizacion.tipo_cliente;
+    this.proceso_selected = data.cotizacion.tipo_proceso;
+    this.precio_selected = data.cotizacion.tipo_precio;
+    this.selectedVendedor = objVendedor;
+    
+    const items = data.cotizacion_items;
+    for (let index = 0; index < items.length; index++) {
+      //OBTENER LOS DATOS DE LOS TOTALES NEVIANDOLE LOS ITEMS MATERIAS PRIMAS
+      const obj_materias:any =  this.calculate_totals_materials_consultar(items[index].cotizacion_mteriales_items);
+      const objParte =  this.partesOptions.find(element => element.codigo_parte == items[index].cotizacion_detalle_item.codigo_parte);
+
+      let obj:itemsCotizacion = {
+        codigo_parte: items[index].cotizacion_detalle_item.codigo_parte,
+        descripcion_parte: objParte.nombre_parte,
+        flag_nueva_parte: false,
+        cav: items[index].cotizacion_detalle_item.cav.toString(),
+        materias_primas: items[index].cotizacion_mteriales_items,
+        total_materia_prima: Number(items[index].cotizacion_detalle_item.total_materias_primas),
+        total_materia_prima_gk: obj_materias.gk_total_materiales,
+        total_materia_prima_margen_seguridad: obj_materias.margen_seguridad_Total,
+        total_materia_prima_margin_2: obj_materias.margin_2_materiales_Total,
+        total_materia_prima_parte_g: obj_materias.parte_g_Total,
+        tipo_maquina:items[index].cotizacion_detalle_item.machine_type,
+        costo_hora_maquina: Number(items[index].cotizacion_detalle_item.costo_hora_maquina),
+        cyclus: items[index].cotizacion_detalle_item.ciclos.toString(),
+        pcs_hr: items[index].cotizacion_detalle_item.pcs_hora,
+        ineficiencia_porcentaje: items[index].cotizacion_detalle_item.porc_ineficiencia,
+        production: items[index].cotizacion_detalle_item.production,
+        margin_4: items[index].cotizacion_detalle_item.margin4,
+        packing_cost: items[index].cotizacion_detalle_item.packing_cost,
+        pcs_packing: items[index].cotizacion_detalle_item.pcs_packing.toString(),
+        packing: items[index].cotizacion_detalle_item.packing,
+        pcs_entrega: items[index].cotizacion_detalle_item.pcs_entrega.toString(),
+        costo_flete: items[index].cotizacion_detalle_item.flete_cost,
+        costo_logistico: items[index].cotizacion_detalle_item.logistic_cost,
+        packing_and_outside_service: items[index].cotizacion_detalle_item.packing_outside_service,
+        hr_mtto: items[index].cotizacion_detalle_item.hr_mantto.toString(),
+        cost_hr: items[index].cotizacion_detalle_item.cost_hr_mtto,
+        pcs_mantto:  items[index].cotizacion_detalle_item.pcs_mtto.toString(),
+        tooling_mantiance: items[index].cotizacion_detalle_item.tooling_maintance,
+        percent_overhead:  items[index].cotizacion_detalle_item.ovh_ind_porc,
+        overhead:  items[index].cotizacion_detalle_item.overhead,
+        margin_overhead:  items[index].cotizacion_detalle_item.overhead_margin,
+        percent_proffit:  items[index].cotizacion_detalle_item.profit_porc,
+        proffit:  items[index].cotizacion_detalle_item.profit,
+        margin_profit:  items[index].cotizacion_detalle_item.margin_profit,
+        unit_price:  items[index].cotizacion_detalle_item.unit_price,
+        margin_total:  items[index].cotizacion_detalle_item.margin_total,
+        kg_material:  items[index].cotizacion_detalle_item.kg_material,
+        moq:  items[index].cotizacion_detalle_item.moq.toString(),
+        eau:  items[index].cotizacion_detalle_item.eau.toString(),
+        total:  items[index].cotizacion_detalle_item.total,
+      }
+  
+      obj.tabla_total_produccion = this.obtener_totalProduction(obj);
+      const aux = obj.tabla_total_produccion/Number(obj.unit_price)
+      obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
+  
+      obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
+      const aux2 = obj.tabla_total_empaque_logistica/Number(obj.unit_price);
+      obj.tabla_empaque_logistica_porc= parseFloat(aux2.toFixed(4));
+  
+      obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
+      const aux3 =  obj.tabla_total_mantenimiento / Number(obj.unit_price)
+      obj.tabla_mantenimiento_porc=  parseFloat(aux3.toFixed(4));
+  
+      this.array_items_cotizacion.push(obj);
+    }
+    this.obtener_totalCotizacfion();
+    
   }
 
   obtener_totalProduction(item:any):number {

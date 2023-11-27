@@ -17,23 +17,23 @@
           
     <!-- Filtros -->
           <div class="my-3 p-4 bg-body rounded shadow-sm">
-            <form>
+            <div>
               <!-- 1ra linea -->
               <div class="row">
                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">FECHA</label>
-                  <input type="text" class="form-control" disabled>
+                  <input type="text" [(ngModel)]="fecha" class="form-control" disabled>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">CLIENTE / PROSPECTO</label>
-                  <input type="text" class="form-control" disabled>
+                  <input type="text" [(ngModel)]="cliente_prospecto" class="form-control" disabled>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">VENDEDOR</label>
-                  <input type="text" class="form-control" disabled>
+                  <input type="text" [(ngModel)]="vendedor"  class="form-control" disabled>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
     <!-- Tabla class="text-center"-->
           <div class="my-3 p-4 bg-body rounded shadow-sm">
@@ -60,238 +60,40 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003114</td>
-                    <td>BATTERY AESTHETIC COVER FRONT PLASTIC</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                  </tr>
-                  <tr>
-                    <td>10-003136</td>
-                    <td>Inverter Aesthetic Cover Main, Front, Plastic</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
-                    <td class="tdIzq">$500,454.00</td>
+                  <tr *ngFor="let item of array_partes ">
+                    <td>{{item.codigo_parte}}</td>
+                    <td>{{item.parteEncontrada.nombre_parte}}</td>
+                    <td class="tdIzq">{{item.ingresos | currency}}</td>
+                    <td class="tdIzq">{{item.costo_ventas | currency}}</td>
+                    <td class="tdIzq">{{item.costo_materia_prima | currency}}</td>
+                    <td class="tdIzq">{{item.costo_mano_obra | currency}}</td>
+                    <td class="tdIzq">{{item.gastos_fabricacion | currency}}</td>
+                    <td class="tdIzq">{{item.utilidad_bruta | currency}}</td>
+                    <td class="tdIzq">{{item.egresos | currency}}</td>
+                    <td class="tdIzq">{{item.gastos_fijos | currency}}</td>
+                    <td class="tdIzq">{{item.utilidad_antes_ebitda | currency}}</td>
+                    <td class="tdIzq">0</td> <!-- TODO --> 
+                    <td class="tdIzq">{{item.isr | currency}}</td>
+                    <td class="tdIzq">{{item.ptu | currency}}</td>
+                    <td class="tdIzq">{{item.utilidad_neta | currency}}</td>
+                    <td class="tdIzq">{{item.margen_neto | currency}}</td>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="float-end fw-bolder">TOTAL</span></td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
-                    <td class="tdIzq fw-bolder">$500,454.00</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().ingresos  | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().costo_ventas | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().costo_materia_prima | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().costo_mano_obra | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().gastos_fabricacion | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_bruta | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().egresos | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().gastos_fijos | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_antes_ebitda | currency}}</td>
+                    <td class="tdIzq fw-bolder">0</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().isr | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().ptu | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_neta | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_neto | currency}}</td>
                   </tr>
                 </tbody>
               </table>

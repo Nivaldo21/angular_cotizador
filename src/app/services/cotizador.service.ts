@@ -51,6 +51,9 @@ export class CotizadorService {
     return this.http.get(this.apiUrl+'/getCotizacionByCode/'+code_cotizacion);
   }
 
+  getDetailsEstadoResultados(code_cotizacion:string){
+    return this.http.get(this.apiUrl+'/getCotizacionEstadoResultadosByCode/'+code_cotizacion);
+  }
 
 
 }

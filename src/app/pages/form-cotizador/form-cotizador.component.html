@@ -22,7 +22,7 @@
               <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">CLIENTE / PROSPECTO</label>
-                  <ng-select [items]="clienteOptions"
+                  <ng-select [items]="clienteOptions" [disabled]="action ? action : false"
                           [addTag]="true"
                           addTagText="Añadir Prospecto"
                           bindLabel="CLI_NOMBRE"  
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">TIPO CLIENTE</label>
-                  <select class="form-select" [(ngModel)]="cliente_selected" (ngModelChange)="onParam_industria()">
+                  <select class="form-select" [(ngModel)]="cliente_selected" (ngModelChange)="onParam_industria()" [disabled]="action ? action : false">
                     <option value="">- Seleccionar -</option>
                     <option value="automotriz">Automotriz</option>
                     <option value="appliance">Appliance</option>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">TIPO PROCESO</label>
-                  <select class="form-select" [(ngModel)]="proceso_selected"  (ngModelChange)="onProceso_Maquina()">
+                  <select class="form-select" [(ngModel)]="proceso_selected"  (ngModelChange)="onProceso_Maquina()" [disabled]="action ? action : false">
                     <option value="">- Seleccionar -</option>
                     <option value="plastico">Plástico</option>
                     <option value="metal">Metal</option>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">PRECIOS</label>
-                  <select class="form-select" [(ngModel)]="precio_selected" (ngModelChange)="onParam_industria()">
+                  <select class="form-select" [(ngModel)]="precio_selected" (ngModelChange)="onParam_industria()" [disabled]="action ? action : false">
                     <option value="">- Seleccionar -</option>
                     <option value="minimo">Mínimo</option>
                     <option value="medio">Medio</option>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">VENDEDOR</label>
-                  <ng-select [items]="vendedoresOptions"
+                  <ng-select [items]="vendedoresOptions" [disabled]="action ? action : false"
                     [addTag]="true"
                     addTagText="Añadir Vendedor"
                     bindLabel="nombre_vendedor"
@@ -70,7 +70,7 @@
               <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">CÓDIGO DE PARTE</label>
-                  <ng-select [items]="partesOptions"
+                  <ng-select [items]="partesOptions" [disabled]="action ? action : false"
                     bindLabel="codigo_parte"
                     [addTag]="true"
                     addTagText="Añadir nuevo código"
@@ -81,7 +81,7 @@
                 </div>
                 <div class="col-sm-12 col-md-8 col-lg-6 col-xl-4 mb-3">
                   <label for="" class="form-label">DESCRIPCIÓN PARTE</label>
-                  <ng-select [items]="partesOptions"
+                  <ng-select [items]="partesOptions" [disabled]="action ? action : false"
                     [addTag]="true"
                     addTagText="Añadir nueva descripción"
                     bindLabel="nombre_parte"
@@ -91,7 +91,7 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                   <label for="" class="form-label">CAV</label>
-                  <input type="number" [(ngModel)]="cav" (ngModelChange)="calculateWeigth()" class="form-control">
+                  <input type="number" [(ngModel)]="cav" (ngModelChange)="calculateWeigth()" class="form-control" [disabled]="action ? action : false">
                 </div>
               </div>
               <!-- 3ra linea -->
@@ -108,7 +108,7 @@
                   </h2>
                   <div id="panelmateriaPrima" class="accordion-collapse collapse show" aria-labelledby="panelHead-materiaPrima">
                     <div class="accordion-body">
-                      <form [formGroup]="form_materiaPrima" (submit)="flag_edit_materiaP ? confirmEditarItem() : setMateriaPrima() " >
+                      <form  *ngIf="!action" [formGroup]="form_materiaPrima" (submit)="flag_edit_materiaP ? confirmEditarItem() : setMateriaPrima() " >
                         <div class="row">
                           <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3">
                             <label for="codigo_materia_prima" class="form-label">CÓDIGO MATERIA PRIMA</label>
@@ -279,7 +279,7 @@
                                 <th class="th5"><span>MARGIN 2</span> <a href="#" class="thFlechas"></a></th>
                                 <th class="th7"><span>% MARGEN SEGURIDAD</span> <a href="#" class="thFlechas"></a></th>
                                 <th class="th7"><span>MARGEN SEGURIDAD</span> <a href="#" class="thFlechas"></a></th>
-                                <th class="text-center th2">ACCIONES</th>
+                                <th class="text-center th2"  *ngIf="!action">ACCIONES</th>
                               </tr>
                             </thead>
                             <tbody *ngIf="array_materiaPrimas.length > 0">
@@ -303,7 +303,7 @@
                                 <td>{{item.margin_2}}</td>
                                 <td>{{item.margen_seguridad_percent}}</td>
                                 <td>{{item.margen_seguridad}}</td>
-                                <td class="text-center">
+                                <td class="text-center" *ngIf="!action">
                                   <button type="button" (click)="editarItem(i)" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
                                   <button type="button" (click)="eliminarItem(i)" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
                                 </td>
@@ -598,7 +598,7 @@
                   </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngIf="!flagEdit_itemCot">
-                  <button type="button" (click)="addItemCotizacion()" class="btn btn-teal btnCentrar">Agregar ítem</button>
+                  <button *ngIf="!action" type="button" (click)="addItemCotizacion()" class="btn btn-teal btnCentrar">Agregar ítem</button>
                 </div>
               </div>
             </div>
@@ -631,21 +631,24 @@
                   <tr>
                     <td class="fw-bolder">{{item.codigo_parte}}</td>
                     <td>{{ item.descripcion_parte }}</td>
-                    <td class="tdIzq">${{item.unit_price}}</td>
-                    <td class="tdIzq">${{item.total_materia_prima}}</td>
+                    <td class="tdIzq">{{item.unit_price | currency}}</td>
+                    <td class="tdIzq">{{item.total_materia_prima | currency}}</td>
                     <td class="tdIzq">{{ (item.total_materia_prima / item.unit_price).toFixed(4) }}%</td>
-                    <td class="tdIzq">${{obtener_totalProduction(item)}}</td>
+                    <td class="tdIzq">{{obtener_totalProduction(item) | currency}}</td>
                     <td class="tdIzq">{{(obtener_totalProduction(item) / item.unit_price).toFixed(4)}}%</td>
-                    <td class="tdIzq">${{obtener_totalEmpaqueLogistica(item)}}</td>
+                    <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item) | currency}}</td>
                     <td class="tdIzq">{{(obtener_totalEmpaqueLogistica(item) / item.unit_price).toFixed(4)}}%</td>
-                    <td class="tdIzq">${{obtener_mantenimiento(item)}}</td>
-                    <td class="tdIzq">%{{(obtener_mantenimiento(item) / item.unit_price).toFixed(4)}}</td>
+                    <td class="tdIzq">{{obtener_mantenimiento(item) | currency}}</td>
+                    <td class="tdIzq">{{(obtener_mantenimiento(item) / item.unit_price).toFixed(4)}}%</td>
                     <td class="tdIzq">{{item.kg_material}}</td>
                     <td class="tdIzq">{{item.eau}}</td>
-                    <td class="tdIzq">${{item.total}}</td>
-                    <td class="text-center">
+                    <td class="tdIzq">{{item.total | currency}}</td>
+                    <td class="text-center" *ngIf="!action">
                       <button type="button" (click)="editarItemCot(i,item)" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-editar.png"></button>
                       <button type="button" (click)="eliminarItemCot(i)" title="Eliminar" class="btn-icon-action"><img src="assets/img/ic-eliminar.png"></button>
+                    </td>
+                    <td class="text-center"  *ngIf="action">
+                      <button type="button" (click)="checkItem(item)" title="Modificar" class="btn-icon-action"><img src="assets/img/ic-detalle.png"></button>
                     </td>
                   </tr>
                   <!-- EL SIGUIENTE TR forma parte de la información de arriba -->
@@ -693,7 +696,7 @@
               </div>  
             </div>
             <!-- termina tabla -->
-            <div class="row mt-5 mb-4" *ngIf="action === '1'">
+            <div class="row mt-5 mb-4" *ngIf="!action">
               <div class="col-6">
                 <button type="button" (click)="guardarCotizacion()" class="btn btn-teal float-end">Guardar</button> 
               </div>
@@ -702,7 +705,7 @@
               </div>
             </div>
 
-            <div class="row mt-5 mb-4" *ngIf="action === '2'">
+            <div class="row mt-5 mb-4" *ngIf="action">
               <div class="col-6">
                 <button type="button"  data-bs-toggle="modal" data-bs-target="#PDFcotizacion" class="btn btn-teal float-end">PDF Ctozacion</button> 
               </div>

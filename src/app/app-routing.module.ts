@@ -7,7 +7,8 @@ import { EstadoResultadosComponent } from './pages/estado-resultados/estado-resu
 const routes: Routes = [
   { path: '', redirectTo: 'cotizador', pathMatch: 'full'},
   { path: 'cotizador', component: CotizadorComponent },
-  { path: 'form-cotizador/:action', component: FormCotizadorComponent },
+  { path: 'form-cotizador/:action/:cot', component: FormCotizadorComponent },
+  { path: 'form-cotizador', component: FormCotizadorComponent },
   { path: 'estado-resultados/:id', component: EstadoResultadosComponent }
 ];
 

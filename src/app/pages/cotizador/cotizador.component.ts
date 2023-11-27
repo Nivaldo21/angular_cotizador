@@ -59,13 +59,14 @@ export class CotizadorComponent {
   }
 
   consultarCotizacion(cotizacion_code:string){
-    this.cotizacion.getDeatalleCotizacion(cotizacion_code).subscribe((resp:any)=>{
-      console.log(resp);
-    })
-    //this.route.navigate([`form-cotizador/${2}`]);
+    this.route.navigate([`form-cotizador/${true}/${cotizacion_code}`]);
+  }
+
+  consultarEstadoResultados(cotizacion_code:string){
+    this.route.navigate([`estado-resultados/${cotizacion_code}`]);
   }
 
   generarCotizacion(){
-    this.route.navigate([`form-cotizador/${1}`]);
+    this.route.navigate([`form-cotizador`]);
   }
 }
