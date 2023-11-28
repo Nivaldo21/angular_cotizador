@@ -50,6 +50,7 @@ export interface CotizacionDetalleItem {
     egresos: string;
     gastos_fijos: string;
     utilidad_antes_ebitda: string;
+    margen_antes_ebitda: any;
     isr: string;
     ptu: string;
     utilidad_neta: string;

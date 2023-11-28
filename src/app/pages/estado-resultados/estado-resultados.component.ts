@@ -46,7 +46,7 @@ export class EstadoResultadosComponent {
       egresos: this.array_partes.reduce((acc, item:any) => acc + (Number(item.egresos) || 0), 0),
       gastos_fijos: this.array_partes.reduce((acc, item:any) => acc + (Number(item.gastos_fijos) || 0), 0),
       utilidad_antes_ebitda: this.array_partes.reduce((acc, item:any) => acc + (Number(item.utilidad_antes_ebitda) || 0), 0),
-      //TODO MARGEN
+      margen_antes_ebitda: this.array_partes.reduce((acc, item:any) => acc + (Number(item.margen_antes_ebitda) || 0), 0),
       isr: this.array_partes.reduce((acc, item:any) => acc + (Number(item.isr) || 0), 0),
       ptu: this.array_partes.reduce((acc, item:any) => acc + (Number(item.ptu) || 0), 0),
       utilidad_neta: this.array_partes.reduce((acc, item:any) => acc + (Number(item.utilidad_neta) || 0), 0),
