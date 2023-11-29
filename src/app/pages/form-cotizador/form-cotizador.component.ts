@@ -143,6 +143,7 @@ export class FormCotizadorComponent {
   }
 
   checkItem(item:any){
+    this.array_materiaPrimas = [];
     console.log(item);
     this.selectedParte_codigo = item.codigo_parte;
     this.selectedParte_descripcion = item.descripcion_parte;
@@ -182,7 +183,7 @@ export class FormCotizadorComponent {
 
       this.form_maquina.patchValue({
         seletcedMaquina: seletcedMaquina,
-        precioMaquina: item.cost_hr,
+        precioMaquina: item.costo_hora_maquina,
         ciclo: item.cyclus,
         pcs_hr: item.pcs_hr,
         production: item.production,
@@ -201,7 +202,7 @@ export class FormCotizadorComponent {
   
       this.form_mantenimientoHerramental.patchValue({
         hr_mantto: item.hr_mtto,
-        precioMaquina: item.costo_hora_maquina,
+        precioMaquina: item.cost_hr,
         pcs_mtto: item.pcs_mantto,
         tooling_maintance: item.tooling_mantiance,
       });
@@ -414,6 +415,7 @@ export class FormCotizadorComponent {
         this.form_maquina.get('ineficiencia_percent')?.setValue(resp.ineficiencia_porc ? resp.ineficiencia_porc : '');
         this.form_totalesPiezas.get('ovh_ind_porc')?.patchValue(resp.overhead_porc ? resp.overhead_porc : '');
         this.form_totalesPiezas.get('profitt_percent')?.patchValue(resp.profit_porc ? resp.profit_porc : '');
+        this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(resp.mtto_cost_hr ? resp.mtto_cost_hr : '');
         this.calculateResinCot();
       }
     });
@@ -463,13 +465,13 @@ export class FormCotizadorComponent {
   }
 
   calculateMargin_2(){
-    const result = ((this.form_materiaPrima.value.resin_basis+this.form_materiaPrima.value.margin_scrap) * this.form_materiaPrima.value.weigth)-this.form_materiaPrima.value.total_mat
+    const result = ((Number(this.form_materiaPrima.value.resin_basis)+Number(this.form_materiaPrima.value.margin_scrap)) * Number(this.form_materiaPrima.value.weigth))-Number(this.form_materiaPrima.value.total_mat);
     this.form_materiaPrima.get('margin_2')?.setValue(result ? result.toFixed(4) : '');
     this.calculateMarginSecurity();
   }
 
   calculateMarginSecurity(){
-    const result = this.form_materiaPrima.value.margin_2 * this.form_materiaPrima.value.margen_seguridad_percent;
+    const result = Number(this.form_materiaPrima.value.margin_2) * this.form_materiaPrima.value.margen_seguridad_percent;
     this.form_materiaPrima.get('margen_seguridad')?.setValue(result ? result.toFixed(4) : '');
   }
 
@@ -515,7 +517,6 @@ export class FormCotizadorComponent {
     if (this.form_maquina.value.seletcedMaquina) {
       console.log("ENTRE ");
       this.form_maquina.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora ? this.form_maquina.value.seletcedMaquina.costo_hora : null);
-      this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora ? this.form_maquina.value.seletcedMaquina.costo_hora : null);
     }
   }
 
@@ -529,8 +530,8 @@ export class FormCotizadorComponent {
   }
 
   calculate_PCS_HR(){
-    const result = (3600/this.form_maquina.value.ciclo)*this.cav;
-    this.form_maquina.get('value.pcs_hr')?.setValue(result ? result.toFixed(4) : '');
+    const result = (3600/this.form_maquina.value.ciclo)*this.cav;;
+    this.form_maquina.get('pcs_hr')?.setValue(result ? result.toFixed(4) : '');
     this.calculate_moq();
   }
 
@@ -574,7 +575,7 @@ export class FormCotizadorComponent {
   }
 
   calculate_tooling_mantiance(){
-    const result = (this.form_mantenimientoHerramental.value.hr_mantto*this.form_maquina.value.precioMaquina)/this.form_mantenimientoHerramental.value.pcs_mtto;
+    const result = (this.form_mantenimientoHerramental.value.hr_mantto*this.form_mantenimientoHerramental.value.precioMaquina)/this.form_mantenimientoHerramental.value.pcs_mtto;
    this.form_mantenimientoHerramental.get('tooling_maintance')?.patchValue(result ? result.toFixed(4) : '');
    this.calculate_overhead();
   }
@@ -867,7 +868,7 @@ export class FormCotizadorComponent {
       total_materia_prima_margin_2: obj_materias.margin_2_materiales_Total,
       total_materia_prima_parte_g: obj_materias.parte_g_Total,
       tipo_maquina: this.form_maquina.value.seletcedMaquina.machine_type,
-      costo_hora_maquina: this.form_maquina.value.seletcedMaquina.costo_hora,
+      costo_hora_maquina: this.form_maquina.value.precioMaquina,
       cyclus: this.form_maquina.value.ciclo,
       pcs_hr: this.form_maquina.value.pcs_hr,
       ineficiencia_porcentaje: this.form_maquina.value.ineficiencia_percent,
@@ -881,7 +882,7 @@ export class FormCotizadorComponent {
       costo_logistico: this.form_empaqueEntrega.value.costo_logistico,
       packing_and_outside_service: this.form_empaqueEntrega.value.packing_outside_service,
       hr_mtto: this.form_mantenimientoHerramental.value.hr_mantto,
-      cost_hr: this.form_maquina.value.precioMaquina,
+      cost_hr: this.form_mantenimientoHerramental.value.precioMaquina,
       pcs_mantto: this.form_mantenimientoHerramental.value.pcs_mtto,
       tooling_mantiance: this.form_mantenimientoHerramental.value.tooling_maintance,
       percent_overhead: this.form_totalesPiezas.value.ovh_ind_porc,
@@ -917,15 +918,6 @@ export class FormCotizadorComponent {
     console.log('item agregado',obj);
   }
 
-  guardarCotizacion_Prueba(){
-    const obj_send:any = {
-      cotizacion_array: this.array_items_cotizacion
-    }
-    this.cotizadorService.postGuardarCotizacion(obj_send).subscribe((resp:any)=>{
-      console.log(resp);
-    });
-  }
-
   guardarCotizacion(){
     this.toast.charge("procesando petición","Cargando...");
     console.log("items cotizacion",this.array_items_cotizacion);
@@ -945,7 +937,7 @@ export class FormCotizadorComponent {
         this.toast.remove();
         console.log(resp);
         this.toast.success('Se agregó correctamente la cotización','Cotización Agregada');
-        this.route.navigate(['/cotizador']);
+        //this.route.navigate(['/cotizador']);
       },
       error: (error: any) => {
         this.toast.remove();
@@ -979,7 +971,7 @@ export class FormCotizadorComponent {
       total_materia_prima_margin_2: obj_materias.margin_2_materiales_Total,
       total_materia_prima_parte_g: obj_materias.parte_g_Total,
       tipo_maquina: this.form_maquina.value.seletcedMaquina.machine_type,
-      costo_hora_maquina: this.form_maquina.value.seletcedMaquina.costo_hora,
+      costo_hora_maquina: this.form_maquina.value.precioMaquina,
       cyclus: this.form_maquina.value.ciclo,
       pcs_hr: this.form_maquina.value.pcs_hr,
       ineficiencia_porcentaje: this.form_maquina.value.ineficiencia_percent,
@@ -993,7 +985,7 @@ export class FormCotizadorComponent {
       costo_logistico: this.form_empaqueEntrega.value.costo_logistico,
       packing_and_outside_service: this.form_empaqueEntrega.value.packing_outside_service,
       hr_mtto: this.form_mantenimientoHerramental.value.hr_mantto,
-      cost_hr: this.form_maquina.value.precioMaquina,
+      cost_hr: this.form_mantenimientoHerramental.value.precioMaquina,
       pcs_mantto: this.form_mantenimientoHerramental.value.pcs_mtto,
       tooling_mantiance: this.form_mantenimientoHerramental.value.tooling_maintance,
       percent_overhead: this.form_totalesPiezas.value.ovh_ind_porc,
@@ -1053,7 +1045,7 @@ export class FormCotizadorComponent {
 
     this.form_maquina.patchValue({
       seletcedMaquina: seletcedMaquina,
-      precioMaquina: item.cost_hr,
+      precioMaquina: item.costo_hora_maquina,
       ciclo: item.cyclus,
       pcs_hr: item.pcs_hr,
       production: item.production,
@@ -1074,7 +1066,7 @@ export class FormCotizadorComponent {
     console.log("pcs_mantto -->",item.pcs_mantto);
     this.form_mantenimientoHerramental.patchValue({
       hr_mantto: item.hr_mtto,
-      precioMaquina: item.costo_hora_maquina,
+      precioMaquina: item.cost_hr,
       pcs_mtto: item.pcs_mantto,
       tooling_maintance: item.tooling_mantiance,
     });
