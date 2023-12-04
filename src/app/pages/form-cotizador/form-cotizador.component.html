@@ -707,7 +707,7 @@
 
             <div class="row mt-5 mb-4" *ngIf="action">
               <div class="col-6">
-                <button type="button"  data-bs-toggle="modal" data-bs-target="#PDFcotizacion" class="btn btn-teal float-end">PDF Ctozacion</button> 
+                <button #botonStart type="button"  data-bs-toggle="modal" data-bs-target="#PDFcotizacion" class="btn btn-teal float-end">PDF Ctozacion</button> 
               </div>
               <div class="col-6">
                 <button type="button" class="btn btn-gris float-start" onclick="history.back()">Cancelar</button> 
@@ -719,22 +719,21 @@
 <!-- MODAL PDF -->
 <div class="modal fade" id="PDFcotizacion" tabindex="-1" aria-labelledby="modalPDF" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <form class="modal-content" [formGroup]="form_pdf" (submit)="downloadPDF()">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="modalPDF">Generar PDF Cotización</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
           <h6>Tipo de documento</h6>
           <div class="row mb-4">
             <div class="col-5">
-              <input class="form-check-input" type="radio" name="tipoDoc" id="tipoDoc1">
-              <label class="form-check-label" for="tipoDoc1">Normal</label>
+              <input class="form-check-input" type="radio" id="tipo_documento_Normal" name="tipo_documento" [value]="'Normal'" formControlName="tipo_documento">
+              <label class="form-check-label" for="tipo_documento_Normal">Normal</label>
             </div>
             <div class="col-5">
-              <input class="form-check-input" type="radio" name="tipoDoc" id="tipoDoc2">
-              <label class="form-check-label" for="tipoDoc2">Ampliado</label>
+              <input class="form-check-input" type="radio" id="tipo_documento_Ampliado" name="tipo_documento" [value]="'Ampliado'" formControlName="tipo_documento">
+              <label class="form-check-label" for="tipo_documento_Ampliado">Ampliado</label>
             </div>
             <div class="col-5"></div>
           </div>
@@ -743,34 +742,34 @@
             <div class="col-12 mb-2">
               <div class="row">
                 <div class="col-1">
-                  <input class="form-check-input float-end" type="checkbox" value="" id="empaqueEstandar">
+                  <input class="form-check-input float-end" type="checkbox" id="condiciones_empaqueEstandar" formControlName="condiciones_empaqueEstandar" name="condiciones_empaqueEstandar">
                 </div>
                 <div class="col-9 col-sp">
-                  <label class="form-check-label" for="empaqueEstandar">Empaque estándar.</label>
+                  <label class="form-check-label" for="condiciones_empaqueEstandar">Empaque estándar.</label>
                 </div>
               </div>
               <div class="row">
                 <div class="col-1">
-                  <input class="form-check-input float-end" type="checkbox" value="" id="materiaPrima">
+                  <input class="form-check-input float-end" type="checkbox" id="condiciones_materiaPrima" formControlName="condiciones_materiaPrima" name="condiciones_materiaPrima">
                 </div>
                 <div class="col-9 col-sp">
-                  <label class="form-check-label" for="materiaPrima">Materia prima proporcionada por el cliente.</label>
+                  <label class="form-check-label" for="condiciones_materiaPrima">Materia prima proporcionada por el cliente.</label>
                 </div>
               </div>
               <div class="row">
                 <div class="col-1">
-                  <input class="form-check-input float-end" type="checkbox" value="" id="OCmoq">
+                  <input class="form-check-input float-end" type="checkbox" id="condiciones_OCmoq" formControlName="condiciones_OCmoq" name="condiciones_OCmoq">
                 </div>
                 <div class="col-9 col-sp">
-                  <label class="form-check-label" for="OCmoq">OC debe cumplir MOQ.</label>
+                  <label class="form-check-label" for="condiciones_OCmoq">OC debe cumplir MOQ.</label>
                 </div>
               </div>
               <div class="row">
                 <div class="col-1">
-                  <input class="form-check-input float-end" type="checkbox" value="" id="EntregaCliente">
+                  <input class="form-check-input float-end" type="checkbox" id="condiciones_EntregaCliente" formControlName="condiciones_EntregaCliente" name="condiciones_EntregaCliente">
                 </div>
                 <div class="col-9 col-sp">
-                  <label class="form-check-label" for="EntregaCliente">Entrega en planta del cliente.</label>
+                  <label class="form-check-label" for="condiciones_EntregaCliente">Entrega en planta del cliente.</label>
                 </div>
               </div>
             </div>
@@ -778,27 +777,26 @@
           <div class="row">
             <div class="col-12 col-sm-6 mb-3">
               <label for="" class="form-label txtLabel-lg">TIEMPO DE ENTREGA</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" formControlName="tiempo_entrga" name="tiempo_entrga">
             </div>
             <div class="col-12 col-sm-6 mb-3">
               <label for="" class="form-label txtLabel-lg">CONDICIONES DE PAGO</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" formControlName="condiciones_pago"  name="condiciones_pago">
             </div>
             <div class="col-12 col-sm-6 mb-3">
               <label for="" class="form-label txtLabel-lg">VIGENCIA</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" formControlName="vigencia"  name="vigencia">
             </div>
           </div>
-        </form>
       </div>
       <div class="row justify-content-center rowBotones">
         <div class="col-6 mb-3">
-          <button type="button" class="btn btn-teal float-end" data-bs-dismiss="modal">Generar</button>
+          <button type="submit" [disabled]="form_pdf.invalid" class="btn btn-teal float-end"><span *ngIf="form_pdf.invalid">🔒</span> Generar</button>
         </div>
         <div class="col-6 mb-3">
           <button type="button" class="btn btn-gris float-start" data-bs-dismiss="modal">Salir</button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>

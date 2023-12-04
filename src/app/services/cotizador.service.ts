@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Request_ParamIndustria from '../interfaces/Params_Industria.interace';
 import Maquinas from '../interfaces/Maquinas.interface';
 import request_Maquinas from '../interfaces/Maquinas.interface';
 import { Request_Cotizaciones, Request_cotizacion_save } from '../interfaces/Request_Cotizaciones.interface';
+import { FormPdf } from '../interfaces/CotizacionPDF.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +56,11 @@ export class CotizadorService {
     return this.http.get(this.apiUrl+'/getCotizacionEstadoResultadosByCode/'+code_cotizacion);
   }
 
+  getCotizacionPDF(data: FormPdf): Observable<Blob> {
+    return this.http.post<Blob>(`${this.apiUrl}/pdf`, data, {
+      responseType: 'blob' as 'json', // Definir responseType como 'blob'
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    });
+  }
 
 }
