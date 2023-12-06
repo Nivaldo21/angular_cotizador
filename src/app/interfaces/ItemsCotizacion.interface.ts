@@ -47,6 +47,8 @@ export interface itemsCotizacion{
     eau?: string;
     total?: string;
 
+    tabla_total_materias_primas?:  number;
+    tabla_total_materias_primas_percent?:  number;
     tabla_total_produccion?: number;
     tabla_produccion_porc?:  number;
     tabla_total_empaque_logistica?:  number;

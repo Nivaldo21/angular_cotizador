@@ -328,7 +328,11 @@ export class FormCotizadorComponent {
         eau:  items[index].cotizacion_detalle_item.eau.toString(),
         total:  items[index].cotizacion_detalle_item.total,
       }
-  
+
+      obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
+      const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+      obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
+
       obj.tabla_total_produccion = this.obtener_totalProduction(obj);
       const aux = obj.tabla_total_produccion/Number(obj.unit_price)
       obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
@@ -347,10 +351,18 @@ export class FormCotizadorComponent {
     
   }
 
+  obtener_totalMateriaPrima(item:itemsCotizacion):number{
+    const Monto_base_Mat =  Number(item.total_materia_prima)+Number(item.total_materia_prima_gk);
+    const Monto_overhead_Mat= Monto_base_Mat*Number(item.percent_overhead);
+    const Monto_profit_Mat = ((Monto_base_Mat+Monto_overhead_Mat)/(1-Number(item.percent_proffit)))-(Monto_base_Mat+Monto_overhead_Mat);
+    const total_materias_primas = Monto_base_Mat + Monto_overhead_Mat + Monto_profit_Mat;
+    return Number(total_materias_primas);
+  }
+
   obtener_totalProduction(item:any):number {
     const Monto_base_Prod = Number(item.production);
     const Monto_overhead_Prod = (item.production*item.percent_overhead);
-    const Monto_profit_Prod = ((Number(item.production)+Monto_overhead_Prod)/(1-(Number(item.percent_proffit)/100)))-(Number(item.production)+Monto_overhead_Prod);
+    const Monto_profit_Prod = ((Number(item.production)+Monto_overhead_Prod)/(1-Number(item.percent_proffit)))-(Number(item.production)+Monto_overhead_Prod);
     const total_produccion = Monto_base_Prod + Monto_overhead_Prod + Monto_profit_Prod;
     return Number(total_produccion.toFixed(4));
   }
@@ -358,7 +370,7 @@ export class FormCotizadorComponent {
   obtener_totalEmpaqueLogistica(item:any): number{
     const Monto_base_emp_log = Number(item.packing_and_outside_service);
     const Monto_overhead_emp_log = (Number(item.packing_and_outside_service) * Number(item.percent_overhead));
-    const Monto_profit_emp_log = ((Number(item.packing_and_outside_service)+Monto_overhead_emp_log)/(1-(Number(item.percent_proffit)/100)))-(Number(item.packing_and_outside_service)+Monto_overhead_emp_log)
+    const Monto_profit_emp_log = ((Number(item.packing_and_outside_service)+Monto_overhead_emp_log)/(1-Number(item.percent_proffit)))-(Number(item.packing_and_outside_service)+Monto_overhead_emp_log)
     const total_empaque_logistica = Monto_base_emp_log + Monto_overhead_emp_log + Monto_profit_emp_log;
     return Number(total_empaque_logistica.toFixed(4))
   }
@@ -366,7 +378,7 @@ export class FormCotizadorComponent {
   obtener_mantenimiento(item:any):number{
     const Monto_base_mantto = Number(item.tooling_mantiance);
     const Monto_overhead_mantto = (Number(item.tooling_mantiance)*Number(item.percent_overhead))
-    const Monto_profit_mantto = ((Number(item.tooling_mantiance)+Monto_overhead_mantto)/(1-(Number(item.percent_proffit)/100)))-(Number(item.tooling_mantiance)+Monto_overhead_mantto)
+    const Monto_profit_mantto = ((Number(item.tooling_mantiance)+Monto_overhead_mantto)/(1-Number(item.percent_proffit)))-(Number(item.tooling_mantiance)+Monto_overhead_mantto)
     const total_mantenimiento = Monto_base_mantto + Monto_overhead_mantto + Monto_profit_mantto;
     return Number(total_mantenimiento.toFixed(4));
   }
@@ -917,6 +929,10 @@ export class FormCotizadorComponent {
       total: this.form_totales.value.total,
     }
 
+    obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
+    const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+    obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
+
     obj.tabla_total_produccion = this.obtener_totalProduction(obj);
     const aux = obj.tabla_total_produccion/Number(obj.unit_price)
     obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
@@ -955,7 +971,7 @@ export class FormCotizadorComponent {
         this.toast.remove();
         console.log(resp);
         this.toast.success('Se agregó correctamente la cotización','Cotización Agregada');
-        //this.route.navigate(['/cotizador']);
+        this.route.navigate(['/cotizador']);
       },
       error: (error: any) => {
         this.toast.remove();
@@ -1019,6 +1035,10 @@ export class FormCotizadorComponent {
       eau: this.form_totales.value.eau,
       total: this.form_totales.value.total,
     }
+
+    obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
+    const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+    obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
 
     obj.tabla_total_produccion = this.obtener_totalProduction(obj);
     const aux = obj.tabla_total_produccion/Number(obj.unit_price)

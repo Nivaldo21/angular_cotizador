@@ -632,8 +632,8 @@
                     <td class="fw-bolder">{{item.codigo_parte}}</td>
                     <td>{{ item.descripcion_parte }}</td>
                     <td class="tdIzq">{{item.unit_price | currency}}</td>
-                    <td class="tdIzq">{{item.total_materia_prima | currency}}</td>
-                    <td class="tdIzq">{{ (item.total_materia_prima / item.unit_price).toFixed(4) }}%</td>
+                    <td class="tdIzq">{{obtener_totalMateriaPrima(item) | currency}}</td>
+                    <td class="tdIzq">{{ (obtener_totalMateriaPrima(item) / item.unit_price).toFixed(4) }}%</td>
                     <td class="tdIzq">{{obtener_totalProduction(item) | currency}}</td>
                     <td class="tdIzq">{{(obtener_totalProduction(item) / item.unit_price).toFixed(4)}}%</td>
                     <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item) | currency}}</td>
