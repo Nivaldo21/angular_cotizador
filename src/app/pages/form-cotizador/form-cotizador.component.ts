@@ -330,19 +330,19 @@ export class FormCotizadorComponent {
       }
 
       obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
-      const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+      const aux1 = (obj.tabla_total_materias_primas/Number(obj.unit_price))*100;
       obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
 
       obj.tabla_total_produccion = this.obtener_totalProduction(obj);
-      const aux = obj.tabla_total_produccion/Number(obj.unit_price)
+      const aux = (obj.tabla_total_produccion/Number(obj.unit_price))*100;
       obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
   
       obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
-      const aux2 = obj.tabla_total_empaque_logistica/Number(obj.unit_price);
+      const aux2 = (obj.tabla_total_empaque_logistica/Number(obj.unit_price))*100;
       obj.tabla_empaque_logistica_porc= parseFloat(aux2.toFixed(4));
   
       obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
-      const aux3 =  obj.tabla_total_mantenimiento / Number(obj.unit_price)
+      const aux3 =  (obj.tabla_total_mantenimiento / Number(obj.unit_price))*100;
       obj.tabla_mantenimiento_porc=  parseFloat(aux3.toFixed(4));
   
       this.array_items_cotizacion.push(obj);
@@ -930,19 +930,19 @@ export class FormCotizadorComponent {
     }
 
     obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
-    const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+    const aux1 = (obj.tabla_total_materias_primas/Number(obj.unit_price))*100;
     obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
 
     obj.tabla_total_produccion = this.obtener_totalProduction(obj);
-    const aux = obj.tabla_total_produccion/Number(obj.unit_price)
+    const aux = (obj.tabla_total_produccion/Number(obj.unit_price))*100;
     obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
 
     obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
-    const aux2 = obj.tabla_total_empaque_logistica/Number(obj.unit_price);
+    const aux2 = (obj.tabla_total_empaque_logistica/Number(obj.unit_price))*100;
     obj.tabla_empaque_logistica_porc= parseFloat(aux2.toFixed(4));
 
     obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
-    const aux3 =  obj.tabla_total_mantenimiento / Number(obj.unit_price)
+    const aux3 =  (obj.tabla_total_mantenimiento / Number(obj.unit_price))*100;
     obj.tabla_mantenimiento_porc=  parseFloat(aux3.toFixed(4));
 
     this.array_items_cotizacion.push(obj);
@@ -1037,19 +1037,19 @@ export class FormCotizadorComponent {
     }
 
     obj.tabla_total_materias_primas = this.obtener_totalMateriaPrima(obj);
-    const aux1 = obj.tabla_total_materias_primas/Number(obj.unit_price)
+    const aux1 = (obj.tabla_total_materias_primas/Number(obj.unit_price))*100;
     obj.tabla_total_materias_primas_percent = parseFloat(aux1.toFixed(4));
 
     obj.tabla_total_produccion = this.obtener_totalProduction(obj);
-    const aux = obj.tabla_total_produccion/Number(obj.unit_price)
+    const aux = (obj.tabla_total_produccion/Number(obj.unit_price))*100;
     obj.tabla_produccion_porc = parseFloat(aux.toFixed(4));
 
     obj.tabla_total_empaque_logistica= this.obtener_totalEmpaqueLogistica(obj);
-    const aux2 = obj.tabla_total_empaque_logistica/Number(obj.unit_price);
+    const aux2 = (obj.tabla_total_empaque_logistica/Number(obj.unit_price))*100;
     obj.tabla_empaque_logistica_porc= parseFloat(aux2.toFixed(4));
 
     obj.tabla_total_mantenimiento= this.obtener_mantenimiento(obj);
-    const aux3 =  obj.tabla_total_mantenimiento / Number(obj.unit_price)
+    const aux3 = (obj.tabla_total_mantenimiento / Number(obj.unit_price))*100;
     obj.tabla_mantenimiento_porc=  parseFloat(aux3.toFixed(4));
 
     this.array_items_cotizacion[this.flagIndexEdit_itemCot]=obj;

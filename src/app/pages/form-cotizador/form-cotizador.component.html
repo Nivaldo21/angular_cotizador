@@ -633,13 +633,13 @@
                     <td>{{ item.descripcion_parte }}</td>
                     <td class="tdIzq">{{item.unit_price | currency}}</td>
                     <td class="tdIzq">{{obtener_totalMateriaPrima(item) | currency}}</td>
-                    <td class="tdIzq">{{ (obtener_totalMateriaPrima(item) / item.unit_price).toFixed(4) }}%</td>
+                    <td class="tdIzq">{{ ((obtener_totalMateriaPrima(item) / item.unit_price)*100).toFixed(4) }}%</td>
                     <td class="tdIzq">{{obtener_totalProduction(item) | currency}}</td>
-                    <td class="tdIzq">{{(obtener_totalProduction(item) / item.unit_price).toFixed(4)}}%</td>
+                    <td class="tdIzq">{{((obtener_totalProduction(item) / item.unit_price)*100).toFixed(4)}}%</td>
                     <td class="tdIzq">{{obtener_totalEmpaqueLogistica(item) | currency}}</td>
-                    <td class="tdIzq">{{(obtener_totalEmpaqueLogistica(item) / item.unit_price).toFixed(4)}}%</td>
+                    <td class="tdIzq">{{((obtener_totalEmpaqueLogistica(item) / item.unit_price)*100).toFixed(4)}}%</td>
                     <td class="tdIzq">{{obtener_mantenimiento(item) | currency}}</td>
-                    <td class="tdIzq">{{(obtener_mantenimiento(item) / item.unit_price).toFixed(4)}}%</td>
+                    <td class="tdIzq">{{((obtener_mantenimiento(item) / item.unit_price)*100).toFixed(4)}}%</td>
                     <td class="tdIzq">{{item.kg_material}}</td>
                     <td class="tdIzq">{{item.eau}}</td>
                     <td class="tdIzq">{{item.total | currency}}</td>
