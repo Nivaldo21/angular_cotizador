@@ -72,11 +72,11 @@
                     <td class="tdIzq">{{item.egresos | currency}}</td>
                     <td class="tdIzq">{{item.gastos_fijos | currency}}</td>
                     <td class="tdIzq">{{item.utilidad_antes_ebitda | currency}}</td>
-                    <td class="tdIzq">{{item.margen_antes_ebitda | currency}}</td>
+                    <td class="tdIzq">{{item.margen_antes_ebitda}} %</td>
                     <td class="tdIzq">{{item.isr | currency}}</td>
                     <td class="tdIzq">{{item.ptu | currency}}</td>
                     <td class="tdIzq">{{item.utilidad_neta | currency}}</td>
-                    <td class="tdIzq">{{item.margen_neto | currency}}</td>
+                    <td class="tdIzq">{{item.margen_neto}}%</td>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="float-end fw-bolder">TOTAL</span></td>
@@ -89,11 +89,11 @@
                     <td class="tdIzq fw-bolder">{{calculateTotals().egresos | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().gastos_fijos | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_antes_ebitda | currency}}</td>
-                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_antes_ebitda | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_antes_ebitda}}%</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().isr | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().ptu | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_neta | currency}}</td>
-                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_neto | currency}}</td>
+                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_neto}}%</td>
                   </tr>
                 </tbody>
               </table>
