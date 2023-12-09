@@ -117,6 +117,7 @@ export class CotizadorComponent {
       if (!init) this.toast.remove();
       if(!resp){ 
         this.array_cot = []; 
+        this.array_cot_aux = []; 
         return; 
       }
       if (resp.length > 0) {
@@ -126,6 +127,7 @@ export class CotizadorComponent {
       }else{
         this.toast.info("Vuelva a intentar con otros filtros","No se encontrarón registros");
         this.array_cot = [];
+        this.array_cot_aux = [];
       } 
     })
   }
