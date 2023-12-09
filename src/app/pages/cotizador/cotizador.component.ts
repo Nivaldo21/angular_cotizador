@@ -15,10 +15,16 @@ import { ToastService } from 'src/app/services/toast.service';
 export class CotizadorComponent {
 
   array_cot: any[] = [];
+  array_cot_aux: any[] = [];
   form_busqueda: FormGroup;
 
   sortedColumn: string = '';
   isAscending: boolean = true;
+
+  itemsPerPage = 10; // Elementos por página
+  currentPage = 1; // Página actual
+  totalPages: number = 1;
+  pages: number[] = [];
 
   constructor(private cotizacion:CotizadorService ,private route:Router, private toast: ToastService,  private fb: FormBuilder){
     registerLocaleData(localeEsMX);
@@ -35,6 +41,38 @@ export class CotizadorComponent {
     this.getCotizaciones(true);
   }
 
+  calculateTotalPages(){
+    this.totalPages = Math.ceil(this.array_cot.length / this.itemsPerPage);
+    this.pages = Array(this.totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  setPage(page: number): void {
+    if (page < 1 || page > this.totalPages) {
+      return;
+    }
+    this.currentPage = page;
+    // Calcular el índice de inicio y fin de los elementos para la página actual
+    const startIndex = (page - 1) * this.itemsPerPage;
+    const endIndex = Math.min(startIndex + this.itemsPerPage - 1, this.array_cot.length - 1);
+
+    // Obtener los elementos correspondientes a la página actual
+    this.array_cot_aux = this.getItemsForPage(startIndex, endIndex);
+  }
+
+  getItemsForPage(startIndex: number, endIndex: number): any[] {
+    // Utiliza tu arreglo de datos original para obtener los elementos de la página actual
+    // Aquí debes adaptar esto a tu lógica específica para obtener los elementos correctos del arreglo completo.
+    return this.array_cot.slice(startIndex, endIndex + 1);
+  }
+
+  getFirstItemIndex(): number {
+    return ((this.currentPage - 1) * this.itemsPerPage) + 1;
+  }
+  
+  getLastItemIndex(): number {
+    return Math.min(this.currentPage * this.itemsPerPage, this.array_cot.length);
+  }
+
   sortColumn(column: string) {
     if (this.sortedColumn === column) {
       this.isAscending = !this.isAscending;
@@ -43,7 +81,7 @@ export class CotizadorComponent {
       this.isAscending = true;
     }
     // Lógica para ordenar los datos en la columna seleccionada
-    this.array_cot.sort((a, b) => {
+    this.array_cot_aux.sort((a, b) => {
       let aValue;
       let bValue;
       if (column == 'vendedor') {
@@ -83,6 +121,8 @@ export class CotizadorComponent {
       }
       if (resp.length > 0) {
         this.array_cot = resp;
+        this.calculateTotalPages();
+        this.setPage(1);
       }else{
         this.toast.info("Vuelva a intentar con otros filtros","No se encontrarón registros");
         this.array_cot = [];

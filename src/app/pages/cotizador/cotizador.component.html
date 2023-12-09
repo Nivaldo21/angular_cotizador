@@ -67,7 +67,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of array_cot">
+            <tr *ngFor="let item of array_cot_aux">
                 <td>{{item.folio_cotizacion}}</td>
                 <td class="text-center">{{item.fecha_generacion | date:'EEEE d MMMM y':'':'Es-MX'}}</td>
                 <td>{{item.cliente.CLI_NOMBRE}}</td>
@@ -84,24 +84,25 @@
     </div>
     <!-- termina tabla -->
     <!-- inicia paginacion -->
+
     <div class="row mt-3">
         <div class="col-6">
-        <p class="gris">Mostrar 1 de 10</p>
+            <p class="gris pt-2">Mostrando {{ getFirstItemIndex() }} de {{ getLastItemIndex() }}</p>
         </div>
         <div class="col-6">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-            <li class="page-item disabled">
-                <a class="page-link">Anterior</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Siguiente</a>
-            </li>
-            </ul>
-        </nav>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link pe-auto" (click)="setPage(currentPage - 1)">Anterior</a>
+                  </li>
+                  <li class="page-item" *ngFor="let page of pages" [class.active]="currentPage === page">
+                    <a class="page-link pe-auto" (click)="setPage(page)">{{ page }}</a>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link pe-auto" (click)="setPage(currentPage + 1)">Siguiente</a>
+                  </li>
+                </ul>
+            </nav>
         </div>
     </div>
     </div>
