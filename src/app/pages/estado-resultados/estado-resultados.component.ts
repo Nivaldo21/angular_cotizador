@@ -18,6 +18,10 @@ export class EstadoResultadosComponent {
   vendedor:string = '';
   array_partes:CotizacionDetalleItem[] = [];
 
+  sortedColumn: string = '';
+  isAscending: boolean = true;
+
+
   ngOnInit() {
     this.getData();
   }
@@ -33,6 +37,32 @@ export class EstadoResultadosComponent {
       
       this.array_partes = resp.data.cotizacion_detalle_array;
     })
+  }
+
+  sortColumn(column: any) {
+    if (this.sortedColumn === column) {
+      this.isAscending = !this.isAscending;
+    } else {
+      this.sortedColumn = column;
+      this.isAscending = true;
+    }
+    // Lógica para ordenar los datos en la columna seleccionada
+    this.array_partes.sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+      if (column == 'parteEncontrada') {
+        aValue = a[column as keyof CotizacionDetalleItem].nombre_parte;
+        bValue = b[column as keyof CotizacionDetalleItem].nombre_parte;
+      }else{
+        aValue = column === 'codigo_parte' ? a[column as keyof CotizacionDetalleItem] : parseFloat(a[column as keyof CotizacionDetalleItem]);
+        bValue = column === 'codigo_parte' ? b[column as keyof CotizacionDetalleItem] : parseFloat(b[column as keyof CotizacionDetalleItem]);
+      }
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return this.isAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      } else {
+        return this.isAscending ? (aValue - bValue) : (bValue - aValue);
+      }
+    });
   }
 
   calculateTotals(){ 

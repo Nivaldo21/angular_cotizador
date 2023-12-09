@@ -57,13 +57,13 @@
         <table class="table table-hover-all">
         <thead>
             <tr>
-            <th class="th2"><span>FÓLIO DE COTIZACIÓN</span> <a href="#" class="thFlechas"></a></th>
-            <th class="th2"><span>FECHA DE GENERACIÓN</span> <a href="#" class="thFlechas"></a></th>
-            <th class="th1"><span>CLIENTE</span> <a href="#" class="thFlechas"></a></th>
-            <th class="th0"><span>MONTO TOTAL</span> <a href="#" class="thFlechas"></a></th>
-            <th class="th0"><span>ESTATUS</span> <a href="#" class="thFlechas"></a></th>
-            <th class="th0"><span>VENDEDOR</span> <a href="#" class="thFlechas"></a></th>
-            <th class="text-center th2">ACCIONES</th>
+                <th class="th2"><span>FÓLIO DE COTIZACIÓN</span> <span (click)="sortColumn('folio_cotizacion')" class="thFlechas"></span></th>
+                <th class="th2"><span>FECHA DE GENERACIÓN</span> <span (click)="sortColumn('fecha_generacion')"class="thFlechas"></span></th>
+                <th class="th1"><span>CLIENTE</span> <span (click)="sortColumn('cliente')" class="thFlechas"></span></th>
+                <th class="th0"><span>MONTO TOTAL</span> <span (click)="sortColumn('total')" class="thFlechas"></span></th>
+                <th class="th0"><span>ESTATUS</span> <span (click)="sortColumn('estatus')" class="thFlechas"></span></th>
+                <th class="th0"><span>VENDEDOR</span> <span (click)="sortColumn('vendedor')" class="thFlechas"></span></th>
+                <th class="text-center th2">ACCIONES</th>
             </tr>
         </thead>
         <tbody>

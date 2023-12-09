@@ -41,22 +41,22 @@
               <table class="table table-hover-all">
                 <thead>
                   <tr>
-                    <th class="th5"><span>CÓDIGO PARTE</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th4"><span>DESCRIPCIÓN PARTE</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>INGRESOS</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>COSTO VENTAS</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>MATERIA PRIMA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>MANO DE OBRA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th0"><span>GASTOS FABRICACIÓN</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th0"><span>UTILIDAD BRUTA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>EGRESOS</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th7"><span>GASTOS FIJOS (OVERHEAD)</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th7"><span>UTILIDAD ANTES EBITDA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th7"><span>MARGEN ANTES EBITDA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>ISR (30%)</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>PUT (10%)</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>UTILIDAD NETA</span> <a href="#" class="thFlechas"></a></th>
-                    <th class="th5"><span>MARGEN NETO</span> <a href="#" class="thFlechas"></a></th>
+                    <th class="th5"><span>CÓDIGO PARTE</span> <span (click)="sortColumn('codigo_parte')" class="thFlechas"></span></th>
+                    <th class="th4"><span>DESCRIPCIÓN PARTE</span> <span (click)="sortColumn('parteEncontrada')" class="thFlechas"></span></th>
+                    <th class="th5"><span>INGRESOS</span> <span (click)="sortColumn('ingresos')" class="thFlechas"></span></th>
+                    <th class="th5"><span>COSTO VENTAS</span> <span (click)="sortColumn('costo_ventas')" class="thFlechas"></span></th>
+                    <th class="th5"><span>MATERIA PRIMA</span> <span (click)="sortColumn('costo_materia_prima')" class="thFlechas"></span></th>
+                    <th class="th5"><span>MANO DE OBRA</span> <span (click)="sortColumn('costo_mano_obra')" class="thFlechas"></span></th>
+                    <th class="th0"><span>GASTOS FABRICACIÓN</span> <span (click)="sortColumn('gastos_fabricacion')"  class="thFlechas"></span></th>
+                    <th class="th0"><span>UTILIDAD BRUTA</span> <span (click)="sortColumn('utilidad_bruta')" class="thFlechas"></span></th>
+                    <th class="th5"><span>EGRESOS</span> <span (click)="sortColumn('egresos')" class="thFlechas"></span></th>
+                    <th class="th7"><span>GASTOS FIJOS (OVERHEAD)</span> <span (click)="sortColumn('gastos_fijos')" class="thFlechas"></span></th>
+                    <th class="th7"><span>UTILIDAD ANTES EBITDA</span> <span (click)="sortColumn('utilidad_antes_ebitda')"  class="thFlechas"></span></th>
+                    <th class="th7"><span>MARGEN ANTES EBITDA</span> <span (click)="sortColumn('margen_antes_ebitda')"  class="thFlechas"></span></th>
+                    <th class="th5"><span>ISR (30%)</span> <span (click)="sortColumn('isr')"  class="thFlechas"></span></th>
+                    <th class="th5"><span>PUT (10%)</span> <span (click)="sortColumn('ptu')"  class="thFlechas"></span></th>
+                    <th class="th5"><span>UTILIDAD NETA</span> <span  (click)="sortColumn('utilidad_neta')" class="thFlechas"></span></th>
+                    <th class="th5"><span>MARGEN NETO</span> <span (click)="sortColumn('margen_neto')"  class="thFlechas"></span></th>
                   </tr>
                 </thead>
                 <tbody>

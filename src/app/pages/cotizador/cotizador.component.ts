@@ -17,6 +17,9 @@ export class CotizadorComponent {
   array_cot: any[] = [];
   form_busqueda: FormGroup;
 
+  sortedColumn: string = '';
+  isAscending: boolean = true;
+
   constructor(private cotizacion:CotizadorService ,private route:Router, private toast: ToastService,  private fb: FormBuilder){
     registerLocaleData(localeEsMX);
     this.form_busqueda = this.fb.group({
@@ -30,6 +33,35 @@ export class CotizadorComponent {
 
   ngOnInit(): void {
     this.getCotizaciones(true);
+  }
+
+  sortColumn(column: string) {
+    if (this.sortedColumn === column) {
+      this.isAscending = !this.isAscending;
+    } else {
+      this.sortedColumn = column;
+      this.isAscending = true;
+    }
+    // Lógica para ordenar los datos en la columna seleccionada
+    this.array_cot.sort((a, b) => {
+      let aValue;
+      let bValue;
+      if (column == 'vendedor') {
+        aValue = a[column].nombre_vendedor;
+        bValue = b[column].nombre_vendedor;
+      }else if(column == 'cliente'){
+        aValue = a[column].CLI_NOMBRE;
+        bValue = b[column].CLI_NOMBRE;
+      }else{
+        aValue = column === 'total' ? parseFloat(a[column]) : a[column];
+        bValue = column === 'total' ? parseFloat(b[column]) : b[column];
+      }
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return this.isAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      } else {
+        return this.isAscending ? (aValue - bValue) : (bValue - aValue);
+      }
+    });
   }
 
   getCotizaciones(init:boolean = false){

@@ -166,7 +166,7 @@ a.logotipo img{height: 35px;}
   display: block;
   width: fit-content;}
 
-.table th a.thFlechas{
+.table th span.thFlechas{
   display: block;
   height: 15px;
   width: 15px;
