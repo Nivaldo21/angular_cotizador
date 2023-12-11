@@ -89,11 +89,11 @@
                     <td class="tdIzq fw-bolder">{{calculateTotals().egresos | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().gastos_fijos | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_antes_ebitda | currency}}</td>
-                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_antes_ebitda}}%</td>
+                    <td class="tdIzq fw-bolder">{{calculate_margins().margen_antes_ebitda.toFixed(4)}}%</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().isr | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().ptu | currency}}</td>
                     <td class="tdIzq fw-bolder">{{calculateTotals().utilidad_neta | currency}}</td>
-                    <td class="tdIzq fw-bolder">{{calculateTotals().margen_neto}}%</td>
+                    <td class="tdIzq fw-bolder">{{calculate_margins().margen_neto.toFixed(4)}}%</td>
                   </tr>
                 </tbody>
               </table>

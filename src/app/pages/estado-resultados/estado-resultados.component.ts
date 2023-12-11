@@ -76,11 +76,20 @@ export class EstadoResultadosComponent {
       egresos: this.array_partes.reduce((acc, item:any) => acc + (Number(item.egresos) || 0), 0),
       gastos_fijos: this.array_partes.reduce((acc, item:any) => acc + (Number(item.gastos_fijos) || 0), 0),
       utilidad_antes_ebitda: this.array_partes.reduce((acc, item:any) => acc + (Number(item.utilidad_antes_ebitda) || 0), 0),
-      margen_antes_ebitda: this.array_partes.reduce((acc, item:any) => acc + (Number(item.margen_antes_ebitda) || 0), 0),
       isr: this.array_partes.reduce((acc, item:any) => acc + (Number(item.isr) || 0), 0),
       ptu: this.array_partes.reduce((acc, item:any) => acc + (Number(item.ptu) || 0), 0),
       utilidad_neta: this.array_partes.reduce((acc, item:any) => acc + (Number(item.utilidad_neta) || 0), 0),
-      margen_neto: this.array_partes.reduce((acc, item:any) => acc + (Number(item.margen_neto) || 0), 0)
+      /* margen_antes_ebitda: this.array_partes.reduce((acc, item:any) => acc + (Number(item.margen_antes_ebitda) || 0), 0),
+      margen_neto: this.array_partes.reduce((acc, item:any) => acc + (Number(item.margen_neto) || 0), 0) */
+    }
+  }
+
+  calculate_margins(){
+    const margen_antes_ebitda_TABLE = (this.calculateTotals().utilidad_neta/this.calculateTotals().ingresos)*100;
+    const margen_neto_TABLE = (this.calculateTotals().utilidad_antes_ebitda -  ( this.calculateTotals().utilidad_antes_ebitda * 0.3) - (this.calculateTotals().utilidad_antes_ebitda * 0.1)) / this.calculateTotals().ingresos;
+    return {
+      margen_antes_ebitda: margen_antes_ebitda_TABLE,
+      margen_neto: margen_neto_TABLE * 100
     }
   }
 }
