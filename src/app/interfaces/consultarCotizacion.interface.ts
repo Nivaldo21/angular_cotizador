@@ -79,6 +79,7 @@ interface CotizacionMaterialesItem {
     porc_margin_seguridad: string;
     margin_seguridad: string;
     total_mat_prima: string;
+    descripcion_materia_prima?: any;
 }
 
 export interface CotizacionData {

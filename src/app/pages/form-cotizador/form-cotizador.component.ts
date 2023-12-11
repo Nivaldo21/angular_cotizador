@@ -286,6 +286,16 @@ export class FormCotizadorComponent {
       const obj_materias:any =  this.calculate_totals_materials_consultar(items[index].cotizacion_mteriales_items);
       const objParte =  this.partesOptions.find(element => element.codigo_parte == items[index].cotizacion_detalle_item.codigo_parte);
 
+      for (let i = 0; i < items[index].cotizacion_mteriales_items.length; i++) {
+        let codigo_material_actual = items[index].cotizacion_mteriales_items[i].codigo_material;
+        let materialEncontrado = this.materialesOptions.find(material => material.codigo_material === codigo_material_actual);
+        if (materialEncontrado) {
+            // Agregar la propiedad descripcion_materia_prima al objeto actual
+            items[index].cotizacion_mteriales_items[i].descripcion_materia_prima = materialEncontrado.nombre_material;
+        }
+      }
+
+      
       let obj:itemsCotizacion = {
         codigo_parte: items[index].cotizacion_detalle_item.codigo_parte,
         descripcion_parte: objParte ? objParte.nombre_parte : '',
