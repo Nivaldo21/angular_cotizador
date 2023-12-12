@@ -69,7 +69,7 @@
         <tbody>
             <tr *ngFor="let item of array_cot_aux">
                 <td>{{item.folio_cotizacion}}</td>
-                <td class="text-center">{{item.fecha_generacion | date:'EEEE d MMMM y':'':'Es-MX'}}</td>
+                <td class="text-center">{{formatearFecha(item.fecha_generacion)}}</td>
                 <td>{{item.cliente.CLI_NOMBRE}}</td>
                 <td class="tdIzq">{{item.total | currency }}</td>
                 <td class="text-center"><span class="estatus est-verde">{{item.estatus=='G' ? 'Generada': item.estatus}}</span></td>

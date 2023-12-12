@@ -132,6 +132,19 @@ export class CotizadorComponent {
     })
   }
 
+  formatearFecha(fecha: string): string {
+    const fechaSinHora = fecha.substring(0, 10); // Obtener solo "2023-12-05" eliminando la parte de la hora
+    const fechaGeneracion = new Date(fechaSinHora); // Convertir la fecha a un objeto Date
+    fechaGeneracion.setDate(fechaGeneracion.getDate() + 1); // Sumar un día
+    const fechaFormateada = fechaGeneracion.toLocaleDateString('es-MX', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    return fechaFormateada;
+  }
+
   consultarCotizacion(cotizacion_code:string){
     this.route.navigate([`form-cotizador/${true}/${cotizacion_code}`]);
   }
