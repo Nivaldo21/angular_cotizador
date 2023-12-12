@@ -63,6 +63,8 @@ export class FormCotizadorComponent {
 
   form_pdf: FormGroup; 
 
+  invalidValues:any[] = [null, undefined, NaN, '', Infinity]; //PARA PODER AGREGAR EL 0 EN LOS CALCULOS
+
   constructor(private cotizadorService:CotizadorService, private fb: FormBuilder, private toast:ToastService, private route:Router){
     this.form_materiaPrima = this.fb.group({
       codigo_materia_prima:[null, [Validators.required]],
@@ -167,7 +169,6 @@ export class FormCotizadorComponent {
 
   checkItem(item:any){
     this.array_materiaPrimas = [];
-    console.log(item);
     this.selectedParte_codigo = item.codigo_parte;
     this.selectedParte_descripcion = item.descripcion_parte;
     this.cav = item.cav;
@@ -424,7 +425,6 @@ export class FormCotizadorComponent {
       if (!this.isProgrammaticChange) {
         // Establece la bandera para evitar llamadas recursivas
         this.isProgrammaticChange = true;
-        console.log("material",material);
         if (option === 1) {
           if (material.nombre_material) {
             this.form_materiaPrima.get('descripcion_materia_prima')?.setValue(material.nombre_material);
@@ -444,6 +444,17 @@ export class FormCotizadorComponent {
     }
   }
 
+  respaldo_param_industria:any = {
+    loss_porc: null,
+    GK_percent: null,
+    scrap_percent: null,
+    overhead_cost: null,
+    ineficiencia_percent: null,
+    ovh_ind_porc: null,
+    profitt_percent: null,
+    precioMaquina: null,
+  }
+
   onParam_industria(){
     let data:Request_ParamIndustria = {
       tipo_cliente: this.cliente_selected,
@@ -451,7 +462,6 @@ export class FormCotizadorComponent {
     }
     if(!this.cliente_selected || !this.precio_selected) return;
     this.cotizadorService.postParamIndustria(data).subscribe((resp:any) => {
-      console.log("resp",resp);
       if (resp) {
         this.form_materiaPrima.get('loss_percent')?.setValue(resp.loss_porc ? resp.loss_porc : '');
         this.form_materiaPrima.get('GK_percent')?.setValue(resp.gk_porc ? resp.gk_porc : '');
@@ -462,6 +472,16 @@ export class FormCotizadorComponent {
         this.form_totalesPiezas.get('ovh_ind_porc')?.patchValue(resp.overhead_porc ? resp.overhead_porc : '');
         this.form_totalesPiezas.get('profitt_percent')?.patchValue(resp.profit_porc ? resp.profit_porc : '');
         this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(resp.mtto_cost_hr ? resp.mtto_cost_hr : '');
+
+        this.respaldo_param_industria.loss_porc  = resp.loss_porc ;
+        this.respaldo_param_industria.GK_percent  = resp.gk_porc;
+        this.respaldo_param_industria.scrap_percent= resp.scrap_porc;
+        this.respaldo_param_industria.overhead_cost= resp.overhead_cost_porc;
+        this.respaldo_param_industria.ineficiencia_percent= resp.ineficiencia_porc;
+        this.respaldo_param_industria.ovh_ind_porc= resp.overhead_porc;
+        this.respaldo_param_industria.profitt_percent= resp.profit_porc;
+        this.respaldo_param_industria.precioMaquina= resp.mtto_cost_hr;
+
         this.calculateResinCot();
       }
     });
@@ -471,7 +491,7 @@ export class FormCotizadorComponent {
     // Realiza tu cálculo aquí
     const calculatedRunnerG = this.form_materiaPrima.value.parte_g * this.form_materiaPrima.value.RUNNER_percent;
     // Actualiza el valor del campo RUNNER_g
-    this.form_materiaPrima.get('RUNNER_g')?.setValue(calculatedRunnerG ? calculatedRunnerG.toFixed(4) : '');
+    this.form_materiaPrima.get('RUNNER_g')?.setValue(!this.invalidValues.includes(calculatedRunnerG) ? calculatedRunnerG.toFixed(4) : '');
     this.calculateWeigth();
   }
 
@@ -479,7 +499,7 @@ export class FormCotizadorComponent {
     const result = ((this.form_materiaPrima.value.RUNNER_g / (this.cav * this.form_materiaPrima.value.loss_percent)) + this.form_materiaPrima.value.parte_g) / 1000;
 
     const formattedResult = result.toFixed(4);
-    this.form_materiaPrima.get('weigth')?.setValue(result ? formattedResult : '');
+    this.form_materiaPrima.get('weigth')?.setValue(!this.invalidValues.includes(result) ? formattedResult : '');
     this.calculateTotal_mat();
     this.caclulate_production();
     this.calculate_PCS_HR();
@@ -487,38 +507,38 @@ export class FormCotizadorComponent {
   
   calculateResinCot(){
     const result = Number(this.form_materiaPrima.value.resin_basis)*(1+Number(this.form_materiaPrima.value.overhead_cost));
-    this.form_materiaPrima.get('resin_cot')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('resin_cot')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculateTotal_mat();
     this.calculateMarginScrap();
   }
 
   calculateTotal_mat(){
     const result = this.form_materiaPrima.value.weigth*this.form_materiaPrima.value.resin_basis;
-    this.form_materiaPrima.get('total_mat')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('total_mat')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculateGK();
     this.calculateMargin_2();
   }
 
   calculateGK(){
     const result = this.form_materiaPrima.value.total_mat*this.form_materiaPrima.value.GK_percent;
-    this.form_materiaPrima.get('GK')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('GK')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
   }
 
   calculateMarginScrap(){
     const result = this.form_materiaPrima.value.resin_basis*this.form_materiaPrima.value.scrap_percent;
-    this.form_materiaPrima.get('margin_scrap')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('margin_scrap')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculateMargin_2();
   }
 
   calculateMargin_2(){
     const result = ((Number(this.form_materiaPrima.value.resin_basis)+Number(this.form_materiaPrima.value.margin_scrap)) * Number(this.form_materiaPrima.value.weigth))-Number(this.form_materiaPrima.value.total_mat);
-    this.form_materiaPrima.get('margin_2')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('margin_2')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculateMarginSecurity();
   }
 
   calculateMarginSecurity(){
     const result = Number(this.form_materiaPrima.value.margin_2) * this.form_materiaPrima.value.margen_seguridad_percent;
-    this.form_materiaPrima.get('margen_seguridad')?.setValue(result ? result.toFixed(4) : '');
+    this.form_materiaPrima.get('margen_seguridad')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
   }
 
   initCombos(){
@@ -553,22 +573,19 @@ export class FormCotizadorComponent {
       tipo_proceso:this.proceso_selected
     }
     this.cotizadorService.postMaquinas(obj).subscribe((resp:any)=>{
-      console.log("maquinas types",resp)
       if(resp) this.opcionesMaquinas = resp;
     })
   }
 
   setCostoMaquina(){
-    console.log("this.form_maquina.value.seletcedMaquina ",this.form_maquina.value.seletcedMaquina)
     if (this.form_maquina.value.seletcedMaquina) {
-      console.log("ENTRE ");
       this.form_maquina.get('precioMaquina')?.patchValue(this.form_maquina.value.seletcedMaquina.costo_hora ? this.form_maquina.value.seletcedMaquina.costo_hora : null);
     }
   }
 
   caclulate_production(){
     const result = ((this.form_maquina.value.precioMaquina*this.form_maquina.value.ciclo/this.cav)/3600)
-    this.form_maquina.get('production')?.setValue(result ? result.toFixed(4) : '');
+    this.form_maquina.get('production')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_PCS_HR();
     this.calculateMargin_4();
     this.calculate_tooling_mantiance();
@@ -577,13 +594,13 @@ export class FormCotizadorComponent {
 
   calculate_PCS_HR(){
     const result = (3600/this.form_maquina.value.ciclo)*this.cav;;
-    this.form_maquina.get('pcs_hr')?.setValue(result ? result.toFixed(4) : '');
+    this.form_maquina.get('pcs_hr')?.setValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_moq();
   }
 
   calculateMargin_4(){
     const result = ( this.form_maquina.value.production*this.form_maquina.value.ineficiencia_percent)
-    this.form_maquina.get('margin_4')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_maquina.get('margin_4')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_margin_overhead();
     this.calculate_margin_total();
     this.calculate_margin_profit();
@@ -591,30 +608,28 @@ export class FormCotizadorComponent {
 
   calculate_PACKING(){
     const result = this.form_empaqueEntrega.value.packing_cost/this.form_empaqueEntrega.value.parking_pcs;
-    this.form_empaqueEntrega.get('packing')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_empaqueEntrega.get('packing')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_packingOutsideService();
   }
 
   caclulate_logisticCost(){
     const result = this.form_empaqueEntrega.value.costo_flete/this.form_empaqueEntrega.value.pcs_entrega;
-    this.form_empaqueEntrega.get('costo_logistico')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_empaqueEntrega.get('costo_logistico')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_packingOutsideService();
   }
 
   calculate_packingOutsideService(){
     const result = Number(this.form_empaqueEntrega.value.packing)+ Number(this.form_empaqueEntrega.value.costo_logistico);
-    this.form_empaqueEntrega.get('packing_outside_service')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_empaqueEntrega.get('packing_outside_service')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_overhead();
   }
 
   calculate_pcs_mtto(){
     if (!this.form_totales.value.eau) {
-      console.log("no se calcula nada en EAU");
       return
     }
-    console.log("si se calcula");
     const result:number = Number(this.form_totales.value.eau)/12;
-    this.form_mantenimientoHerramental.get('pcs_mtto')?.patchValue(result ? result.toFixed(4) : null);
+    this.form_mantenimientoHerramental.get('pcs_mtto')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : null);
     this.calculate_tooling_mantiance();
     this.calculate_kg_material();
     this.calculate_total();
@@ -622,7 +637,7 @@ export class FormCotizadorComponent {
 
   calculate_tooling_mantiance(){
     const result = (this.form_mantenimientoHerramental.value.hr_mantto*this.form_mantenimientoHerramental.value.precioMaquina)/this.form_mantenimientoHerramental.value.pcs_mtto;
-   this.form_mantenimientoHerramental.get('tooling_maintance')?.patchValue(result ? result.toFixed(4) : '');
+   this.form_mantenimientoHerramental.get('tooling_maintance')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
    this.calculate_overhead();
   }
 
@@ -698,14 +713,14 @@ export class FormCotizadorComponent {
     const denominator:number = 1 - profittPercent;
 
     let result:number = (numerator / denominator) - numerator;
-    this.form_totalesPiezas.get('profitt')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totalesPiezas.get('profitt')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_unit_price();
   }
 
   calculate_margin_profit(){
     const obj:any = this.calculate_totals_materials();
     const result:number =  (obj.margin_2_materiales_Total + obj.margen_seguridad_Total + Number(this.form_maquina.value.margin_4) + Number(this.form_totalesPiezas.value.margin_overhead)) / (1-Number(this.form_totalesPiezas.value.profitt_percent)) - (obj.margin_2_materiales_Total + obj.margen_seguridad_Total+ Number(this.form_maquina.value.margin_4) + Number(this.form_totalesPiezas.value.margin_overhead));
-    this.form_totalesPiezas.get('margin_profitt')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totalesPiezas.get('margin_profitt')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_margin_total();
   }
 
@@ -729,7 +744,7 @@ export class FormCotizadorComponent {
       profitt +
       packingOutsideService +
       toolingMaintance;
-    this.form_totalesPiezas.get('unit_price')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totalesPiezas.get('unit_price')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
     this.calculate_total();
   }
 
@@ -748,25 +763,23 @@ export class FormCotizadorComponent {
     margin4 +
     marginOverhead +
     marginProfitt;
-    this.form_totalesPiezas.get('margin_total')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totalesPiezas.get('margin_total')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
   }
 
   calculate_kg_material(){
     const obj:any = this.calculate_totals_materials();
     const result = (Number(this.form_totales.value.eau)*Number(obj.parte_g_Total))/1000;
-    this.form_totales.get('kg_material')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totales.get('kg_material')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
   }
 
   calculate_moq(){
     const result:number = Number(this.form_maquina.value.pcs_hr) * 24;
-    console.log(this.form_maquina.value.pcs_hr);
-    console.log(result);
-    this.form_totales.get('moq')?.patchValue(result ? result.toFixed(4) : '');
+    this.form_totales.get('moq')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
   }
 
   calculate_total(){
     const result:number = Number(this.form_totales.value.eau)*Number(this.form_totalesPiezas.value.unit_price);
-    this.form_totales.get('total')?.patchValue(result ?result.toFixed(4):'');
+    this.form_totales.get('total')?.patchValue(!this.invalidValues.includes(result) ?result.toFixed(4):'');
   }
 
 
@@ -810,7 +823,6 @@ export class FormCotizadorComponent {
       margen_seguridad_percent: this.form_materiaPrima.value.margen_seguridad_percent,
       margen_seguridad: this.form_materiaPrima.value.margen_seguridad,
     }
-    console.log(this.form_materiaPrima.value);
     this.array_materiaPrimas.push(obj);
     this.toast.success("Materia prima agregada al listado","Agregado con exito");
     this.form_materiaPrima.reset();
@@ -959,12 +971,22 @@ export class FormCotizadorComponent {
     this.toast.success("Item de Cotización agregada con exito","Item agregado");
     this.obtener_totalCotizacfion();
     this.limpiarSecciones();
-    console.log('item agregado',obj);
+
+    // ESTO ES PARA QUE LAS CONFIGURACIONES DE TIPO_CLIENTE CON TIPOPRECIOS 
+    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
+    this.form_maquina.get('ineficiencia_percent')?.setValue(this.respaldo_param_industria.ineficiencia_percent ? this.respaldo_param_industria.ineficiencia_percent : '');
+    this.form_totalesPiezas.get('ovh_ind_porc')?.patchValue( this.respaldo_param_industria.ovh_ind_porc ? this.respaldo_param_industria.ovh_ind_porc : '');
+    this.form_totalesPiezas.get('profitt_percent')?.patchValue(this.respaldo_param_industria.profitt_percent ? this.respaldo_param_industria.profitt_percent : '');
+    this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.respaldo_param_industria.precioMaquina ? this.respaldo_param_industria.precioMaquina : '');
+    this.calculateResinCot();
   }
 
   guardarCotizacion(){
     this.toast.charge("procesando petición","Cargando...");
-    console.log("items cotizacion",this.array_items_cotizacion);
     const obj_send:Request_cotizacion_save = {
       cliente_prospecto: this.selectedCliente,
       tipo_cliente: this.cliente_selected,
@@ -979,13 +1001,11 @@ export class FormCotizadorComponent {
     this.cotizadorService.postGuardarCotizacion(obj_send).subscribe({
       next: (resp: any) => {
         this.toast.remove();
-        console.log(resp);
         this.toast.success('Se agregó correctamente la cotización','Cotización Agregada');
         this.route.navigate(['/cotizador']);
       },
       error: (error: any) => {
         this.toast.remove();
-        console.error(error);
         if (error.status === 500) {
           this.toast.error('Verifique todos los campos de la cotización e inténtelo de nuevo','Error en Agregar Cotización 500');
         } else if (error.status === 400) {
@@ -1111,7 +1131,6 @@ export class FormCotizadorComponent {
       packing_outside_service: item.packing_and_outside_service,
     });
 
-    console.log("pcs_mantto -->",item.pcs_mantto);
     this.form_mantenimientoHerramental.patchValue({
       hr_mantto: item.hr_mtto,
       precioMaquina: item.cost_hr,
@@ -1183,24 +1202,10 @@ export class FormCotizadorComponent {
       return true;
     }
     if (this.form_totalesPiezas.invalid) {
-      Object.keys(this.form_totalesPiezas.controls).forEach(field => {
-        const control = this.form_totalesPiezas.get(field);
-        if (control && control.invalid) {
-          const errors = control.errors;
-          console.log(`Errores en el campo ${field}:`, errors);
-        }
-      });
       this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales pieza");
       return true;
     }
     if (this.form_totales.invalid) {
-      Object.keys(this.form_totales.controls).forEach(field => {
-        const control = this.form_totales.get(field);
-        if (control && control.invalid) {
-          const errors = control.errors;
-          console.log(`Errores en el campo ${field}:`, errors);
-        }
-      });
       this.toast.warning("Hay errores y/o campos faltantes","Campos Faltantes - Totales");
       return true;
     }
