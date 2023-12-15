@@ -764,6 +764,7 @@ export class FormCotizadorComponent {
     marginOverhead +
     marginProfitt;
     this.form_totalesPiezas.get('margin_total')?.patchValue(!this.invalidValues.includes(result) ? result.toFixed(4) : '');
+    this.calculate_total();
   }
 
   calculate_kg_material(){
@@ -778,7 +779,7 @@ export class FormCotizadorComponent {
   }
 
   calculate_total(){
-    const result:number = Number(this.form_totales.value.eau)*Number(this.form_totalesPiezas.value.unit_price);
+    const result:number = (Number(this.form_totalesPiezas.value.unit_price) /  Number(this.form_totalesPiezas.value.margin_total)) * Number(this.form_totales.value.eau);
     this.form_totales.get('total')?.patchValue(!this.invalidValues.includes(result) ?result.toFixed(4):'');
   }
 
@@ -826,6 +827,14 @@ export class FormCotizadorComponent {
     this.array_materiaPrimas.push(obj);
     this.toast.success("Materia prima agregada al listado","Agregado con exito");
     this.form_materiaPrima.reset();
+
+    //ENVIAR LOS DATOS QUE SE AUTOCOMPLETEN SOLOS
+    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
+
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
@@ -897,6 +906,13 @@ export class FormCotizadorComponent {
     this.array_materiaPrimas[this.flag_edit_index_materiaP] = obj;
     this.cancelarEditarItem();
     this.toast.success("Materia prima editada","Edicion con exito");
+    //ENVIAR LOS DATOS QUE SE AUTOCOMPLETEN SOLOS
+    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
+
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
