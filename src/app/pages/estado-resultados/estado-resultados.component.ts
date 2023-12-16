@@ -85,7 +85,7 @@ export class EstadoResultadosComponent {
   }
 
   calculate_margins(){
-    const margen_antes_ebitda_TABLE = (this.calculateTotals().utilidad_neta/this.calculateTotals().ingresos)*100;
+    const margen_antes_ebitda_TABLE = (this.calculateTotals().utilidad_antes_ebitda / this.calculateTotals().ingresos)*100;
     const margen_neto_TABLE = (this.calculateTotals().utilidad_antes_ebitda -  ( this.calculateTotals().utilidad_antes_ebitda * 0.3) - (this.calculateTotals().utilidad_antes_ebitda * 0.1)) / this.calculateTotals().ingresos;
     return {
       margen_antes_ebitda: margen_antes_ebitda_TABLE,
