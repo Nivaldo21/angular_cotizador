@@ -862,6 +862,12 @@ export class FormCotizadorComponent {
     this.flag_edit_materiaP = false;
     this.flag_edit_index_materiaP = -1;
     this.form_materiaPrima.reset();
+    //ENVIAR LOS DATOS QUE SE AUTOCOMPLETEN SOLOS
+    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
   }
 
   confirmEditarItem(){
@@ -906,13 +912,6 @@ export class FormCotizadorComponent {
     this.array_materiaPrimas[this.flag_edit_index_materiaP] = obj;
     this.cancelarEditarItem();
     this.toast.success("Materia prima editada","Edicion con exito");
-    //ENVIAR LOS DATOS QUE SE AUTOCOMPLETEN SOLOS
-    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
-    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
-    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
-    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
-    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
-
     this.calculate_overhead(); //se edito el total de los materiales y se vuelve a calular
     this.calculate_margin_overhead();
   }
@@ -1101,6 +1100,16 @@ export class FormCotizadorComponent {
     this.array_items_cotizacion[this.flagIndexEdit_itemCot]=obj;
     this.flagEdit_itemCot = false;
     this.limpiarSecciones();
+      // ESTO ES PARA QUE LAS CONFIGURACIONES DE TIPO_CLIENTE CON TIPOPRECIOS 
+      this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+      this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+      this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+      this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+      this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
+      this.form_maquina.get('ineficiencia_percent')?.setValue(this.respaldo_param_industria.ineficiencia_percent ? this.respaldo_param_industria.ineficiencia_percent : '');
+      this.form_totalesPiezas.get('ovh_ind_porc')?.patchValue( this.respaldo_param_industria.ovh_ind_porc ? this.respaldo_param_industria.ovh_ind_porc : '');
+      this.form_totalesPiezas.get('profitt_percent')?.patchValue(this.respaldo_param_industria.profitt_percent ? this.respaldo_param_industria.profitt_percent : '');
+      this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.respaldo_param_industria.precioMaquina ? this.respaldo_param_industria.precioMaquina : '');
     this.toast.success("La edicion del item se realizo correctamente","Item actualizado");
   }
 
@@ -1109,6 +1118,16 @@ export class FormCotizadorComponent {
     this.flagEdit_itemCot = false;
     this.flagIndexEdit_itemCot = -1;
     this.limpiarSecciones();
+    // ESTO ES PARA QUE LAS CONFIGURACIONES DE TIPO_CLIENTE CON TIPOPRECIOS 
+    this.form_materiaPrima.get('loss_percent')?.setValue(this.respaldo_param_industria.loss_porc ? this.respaldo_param_industria.loss_porc: '');
+    this.form_materiaPrima.get('GK_percent')?.setValue(this.respaldo_param_industria.GK_percent ? this.respaldo_param_industria.GK_percent : '');
+    this.form_materiaPrima.get('scrap_percent')?.setValue(this.respaldo_param_industria.scrap_percent ? this.respaldo_param_industria.scrap_percent : '');
+    this.form_materiaPrima.get('overhead_cost')?.setValue(this.respaldo_param_industria.overhead_cost ? this.respaldo_param_industria.overhead_cost : '');
+    this.form_materiaPrima.get('overhead_cost')?.markAllAsTouched();
+    this.form_maquina.get('ineficiencia_percent')?.setValue(this.respaldo_param_industria.ineficiencia_percent ? this.respaldo_param_industria.ineficiencia_percent : '');
+    this.form_totalesPiezas.get('ovh_ind_porc')?.patchValue( this.respaldo_param_industria.ovh_ind_porc ? this.respaldo_param_industria.ovh_ind_porc : '');
+    this.form_totalesPiezas.get('profitt_percent')?.patchValue(this.respaldo_param_industria.profitt_percent ? this.respaldo_param_industria.profitt_percent : '');
+    this.form_mantenimientoHerramental.get('precioMaquina')?.patchValue(this.respaldo_param_industria.precioMaquina ? this.respaldo_param_industria.precioMaquina : '');
   }
 
   flagEdit_itemCot:boolean = false;
